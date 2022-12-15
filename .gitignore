@@ -1,4 +1,5 @@
 __pycache__/
 logs/
-small_train.tfrecords
 tissue_recogniser/
+sample_data/
+small_train.tfrecords

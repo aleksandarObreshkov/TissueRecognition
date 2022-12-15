@@ -3,8 +3,9 @@ import tif_to_nii
 import os
 import SimpleITK as sitk
 
+root_dir = 'D:/python/tissue_recognition'
 train_filename = 'D/University/Bioinformatics/recognition/train.tfrecords' # The big file
-small_train_filename = 'D:/University/Bioinformatics/recognition/small_train.tfrecords' # A smaller file
+small_train_filename = 'D:/python/tissue_recognition/small_train.tfrecords' # A smaller file
 
 #gets the first 100 images for testing purposes
 def get_all_nii_images():
@@ -86,6 +87,30 @@ def make_record():
     writer.close()
 
 
+def make_record_from_file(filename):
+    record_filename = f'{root_dir}/{filename}.tfrecords'
+    writer = tf.io.TFRecordWriter(record_filename)
+    filename = f'{root_dir}/sample_data/{filename}'
+
+    image_object = sitk.ReadImage(filename)
+
+    # Load the image and label
+    img = sitk.GetArrayFromImage(image_object)
+    label = get_proper_label(filename)
+    
+    # Create a feature
+    feature = {'label': _int64_feature(label),
+            'image': _float_feature(img.ravel())}
+            
+    # Create an example protocol buffer
+    example = tf.train.Example(features=tf.train.Features(feature=feature))
+
+    # Serialize to string and write on the file
+    writer.write(example.SerializeToString()) 
+    writer.close()
+    return record_filename
+  
+
 def decode(serialized_example):
     features = tf.io.parse_example(
         [serialized_example],
@@ -98,13 +123,10 @@ def decode(serialized_example):
     return features['image'], features['label']
 
 
-def get_all_images_from_tf_record():
-    filenames = [train_filename]
+def get_all_images_from_tf_record(tf_record_name):
+    filenames = [tf_record_name]
     dataset = tf.data.TFRecordDataset(filenames)
     dataset = dataset.map(decode)
-    # dataset = dataset.repeat(None)
-    # dataset = dataset.batch(1)
-    # dataset = dataset.prefetch(1)
     all_images = []
     all_labels = []
     for data in dataset:
@@ -114,8 +136,8 @@ def get_all_images_from_tf_record():
     return all_images, all_labels
 
 
-def get_image_label_pairs_by_label():
-    filenames = [small_train_filename]
+def get_image_label_pairs_by_label(tf_record_name):
+    filenames = [tf_record_name]
     dataset = tf.data.TFRecordDataset(filenames)
     dataset = dataset.map(decode)
 

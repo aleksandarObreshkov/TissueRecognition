@@ -1,9 +1,9 @@
 import tensorflow as tf
 import keras
-import numpy as np
 import tf_records_repository as tf_repo
 import os
 import time
+import sys
 
 class_names = ["ADI", "BACK", "DEB", "LYM", "MUC", "MUS", "NORM", "STR", "TUM"]
 model_name = "tissue_recogniser"
@@ -11,7 +11,7 @@ root_logdir = os.path.join(os.curdir, "logs/fit/")
 
 #This method returns all images and all labels as a tuple, and we need to separate them into test and training data
 def create_train_test_validation_dataset_arrays():
-    (images_array,labels_array) = tf_repo.get_image_label_pairs_by_label()
+    (images_array,labels_array) = tf_repo.get_image_label_pairs_by_label(tf_repo.small_train_filename)
 
     train_images = []
     train_labels = []
@@ -24,22 +24,17 @@ def create_train_test_validation_dataset_arrays():
 
     for images, labels in zip(images_array, labels_array):
         all_images_size = len(images)
-        #print(len(images))
-        #print(len(labels))
 
         last_index_train = int(len(images)*0.7)
         train_images.extend(images[:last_index_train])
         train_labels.extend(labels[:last_index_train])
-
-        #print(len(train_images))
-        #print(len(train_labels))
         
         last_index_test = int(len(images)*0.9)
         test_images.extend(images[last_index_train:last_index_test])
         test_labels.extend(labels[last_index_train:last_index_test])
         
-        validation_images.extend(images[last_index_test:all_images_size-1]) #was -30
-        validation_labels.extend(labels[last_index_test:all_images_size-1]) #was -30
+        validation_images.extend(images[last_index_test:all_images_size-1])
+        validation_labels.extend(labels[last_index_test:all_images_size-1])
 
     return (train_images, train_labels), (test_images, test_labels), (validation_images, validation_labels)
 
@@ -123,21 +118,37 @@ def load_model():
     return tf.keras.models.load_model(model_name)
 
 
-if __name__ == '__main__':
+def get_tensorboard_callback():
     run_logdir = get_run_logdir()
-    tensorboard_cb = keras.callbacks.TensorBoard(run_logdir)
+    return keras.callbacks.TensorBoard(run_logdir)
+
+
+if __name__ == '__main__':
+    tensorboard_callback = get_tensorboard_callback()
     alexnet_model: tf.keras.Model
-    (train_ds, test_ds, validation_ds) = get_datasets()
+
+    file_name = "STR-LTKLMSCL.tif.nii"
+    record_filename = tf_repo.make_record_from_file(file_name)
+
+    (image, label) = tf_repo.get_image_label_pairs_by_label(record_filename)
+    file_dataset = tf.data.Dataset.from_tensor_slices((image, label))
+    file_dataset = (file_dataset
+                    .map(resize_images)
+                    .batch(10, drop_remainder=True))
 
     if model_name not in os.listdir(os.curdir):
+        (train_ds, test_ds, validation_ds) = get_datasets()
         alexnet_model = create_model()
         alexnet_model.fit(train_ds,
                     epochs=100,
                     validation_data=validation_ds,
                     validation_freq=1,
-                    callbacks=[tensorboard_cb])
+                    callbacks=[tensorboard_callback])
+
+        alexnet_model.evaluate(test_ds)
+        alexnet_model.save(model_name)
+
     else:
         alexnet_model = tf.keras.models.load_model(model_name)
     
-    alexnet_model.evaluate(test_ds)
-    alexnet_model.save(model_name)
+    alexnet_model.evaluate(file_dataset)
