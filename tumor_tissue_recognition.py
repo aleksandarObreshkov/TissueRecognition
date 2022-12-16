@@ -24,15 +24,10 @@ def create_train_test_validation_dataset_arrays():
 
     for images, labels in zip(images_array, labels_array):
         all_images_size = len(images)
-        #print(len(images))
-        #print(len(labels))
 
         last_index_train = int(len(images)*0.7)
         train_images.extend(images[:last_index_train])
         train_labels.extend(labels[:last_index_train])
-
-        #print(len(train_images))
-        #print(len(train_labels))
         
         last_index_test = int(len(images)*0.9)
         test_images.extend(images[last_index_train:last_index_test])
@@ -112,7 +107,7 @@ def get_run_logdir():
 def create_model():
     alexnet_model = get_alexnet_model()
 
-    #alexnet_model.summary()
+    alexnet_model.summary()
     alexnet_model.compile(loss='sparse_categorical_crossentropy', 
                         optimizer=tf.optimizers.SGD(learning_rate=0.001), 
                         metrics=['accuracy'])

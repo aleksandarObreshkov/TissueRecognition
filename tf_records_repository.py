@@ -3,10 +3,8 @@ import tif_to_nii
 import os
 import SimpleITK as sitk
 
-train_filename = 'D/University/Bioinformatics/recognition/train.tfrecords' # The big file
-small_train_filename = 'D:/University/Bioinformatics/recognition/small_train.tfrecords' # A smaller file
+small_train_filepath = f'{os.curdir}/small_train.tfrecords' # A smaller file
 
-#gets the first 100 images for testing purposes
 def get_all_nii_images():
     all_filenames = []
     root_dir = tif_to_nii.nii_dir
@@ -16,7 +14,8 @@ def get_all_nii_images():
     return all_filenames
 
 
-def get_some_nii_images():
+#get the first 500 of each time so that debugging is faster
+def get_nii_images():
     all_filenames = []
     counter = 0
     root_dir = tif_to_nii.nii_dir
@@ -61,9 +60,9 @@ def make_record():
     print("Starting saving of TFRecords...")
 
     # open the file
-    writer = tf.io.TFRecordWriter(small_train_filename)
+    writer = tf.io.TFRecordWriter(small_train_filepath)
 
-    all_filenames = get_some_nii_images()
+    all_filenames = get_nii_images()
 
     # iterate through all .nii files:
     for meta_data in all_filenames:
@@ -98,24 +97,8 @@ def decode(serialized_example):
     return features['image'], features['label']
 
 
-def get_all_images_from_tf_record():
-    filenames = [train_filename]
-    dataset = tf.data.TFRecordDataset(filenames)
-    dataset = dataset.map(decode)
-    # dataset = dataset.repeat(None)
-    # dataset = dataset.batch(1)
-    # dataset = dataset.prefetch(1)
-    all_images = []
-    all_labels = []
-    for data in dataset:
-        all_images.append(data[0])
-        all_labels.append(data[1])
-    
-    return all_images, all_labels
-
-
 def get_image_label_pairs_by_label():
-    filenames = [small_train_filename]
+    filenames = [small_train_filepath]
     dataset = tf.data.TFRecordDataset(filenames)
     dataset = dataset.map(decode)
 

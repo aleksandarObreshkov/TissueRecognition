@@ -2,6 +2,7 @@ from imio import load, save
 import os
 
 dirs = ["ADI", "BACK", "DEB", "LYM", "MUC", "MUS", "NORM", "STR", "TUM"]
+#The following directories should be updated to the directories where the nii and tiff images are stored
 tiff_dir = "E:/Bioinformatics/Tumor samples/samples_tiff"
 nii_dir = "E:/Bioinformatics/Tumor samples/samples_nii"
 
