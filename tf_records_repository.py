@@ -3,7 +3,7 @@ import tif_to_nii
 import os
 import SimpleITK as sitk
 
-small_train_filepath = f'{os.curdir}/Tumor samples/small_train.tfrecords' # A smaller file
+small_train_filepath = f'{os.curdir}/Tumor samples/train.tfrecords' # A smaller file
 
 def get_all_nii_images():
     all_filenames = []
