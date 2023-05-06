@@ -3,7 +3,7 @@ import tf_records_repository as tf_repo
 
 
 #This method returns all images and all labels as a tuple, and we need to separate them into test and training data
-def create_train_test_validation_dataset_arrays():
+def create_train_test_validation_dataset_arrays() -> tuple[tuple[list, list], tuple[list, list], tuple[list, list]]:
     (images_array,labels_array) = tf_repo.get_image_label_pairs_by_label()
 
     train_images = []
@@ -32,7 +32,7 @@ def create_train_test_validation_dataset_arrays():
     return (train_images, train_labels), (test_images, test_labels), (validation_images, validation_labels)
 
 
-def get_datasets():
+def get_datasets() -> tuple[tf.data.Dataset, tf.data.Dataset, tf.data.Dataset]:
     (train_images, train_labels), (test_images, test_labels), (validation_images, validation_labels) = create_train_test_validation_dataset_arrays()
 
     train_ds = tf.data.Dataset.from_tensor_slices((train_images, train_labels))

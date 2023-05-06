@@ -5,7 +5,7 @@ import SimpleITK as sitk
 
 small_train_filepath = f'{os.curdir}/Tumor samples/train.tfrecords' # A smaller file
 
-def get_all_nii_images():
+def get_all_nii_images() -> list[str]:
     all_filenames = []
     root_dir = tif_to_nii.nii_dir
     for dir in os.listdir(root_dir):
@@ -15,7 +15,7 @@ def get_all_nii_images():
 
 
 #get the first 500 of each type so that debugging is faster
-def get_nii_images():
+def get_nii_images() -> list[str]:
     all_filenames = []
     counter = 0
     root_dir = tif_to_nii.nii_dir
@@ -36,7 +36,7 @@ def _float_feature(value):
     return tf.train.Feature(float_list=tf.train.FloatList(value=value))
 
 
-def get_proper_label(filename):
+def get_proper_label(filename) -> int:
     label_map = {
         "ADI":1, 
         "BACK":2,
@@ -85,7 +85,7 @@ def make_record():
     writer.close()
 
 
-def decode(serialized_example):
+def decode(serialized_example) -> tuple[tf.io.FixedLenFeature, tf.io.FixedLenFeature]:
     features = tf.io.parse_example(
         [serialized_example],
         features={'image': tf.io.FixedLenFeature([150528], tf.float32),
@@ -97,7 +97,7 @@ def decode(serialized_example):
     return features['image'], features['label']
 
 
-def get_image_label_pairs_by_label():
+def get_image_label_pairs_by_label() -> tuple[list[tf.io.FixedLenFeature], list[tf.io.FixedLenFeature]]:
     filenames = [small_train_filepath]
     dataset = tf.data.TFRecordDataset(filenames)
     dataset = dataset.map(decode)
