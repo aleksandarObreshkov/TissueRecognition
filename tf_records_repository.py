@@ -3,7 +3,7 @@ import tif_to_nii
 import os
 import SimpleITK as sitk
 
-small_train_filepath = f'{os.curdir}/Tumor samples/train.tfrecords' # A smaller file
+small_train_filepath = f'{os.curdir}/Tumor samples/small_train.tfrecords' # A smaller file
 
 def get_all_nii_images() -> list[str]:
     all_filenames = []
@@ -22,7 +22,7 @@ def get_nii_images() -> list[str]:
     for dir in os.listdir(root_dir):
         for image in os.listdir(f'{root_dir}/{dir}'):
             counter += 1
-            if(counter == 500): break
+            if(counter == 200): break
             all_filenames.append(f'{root_dir}/{dir}/{image}')
         counter = 0
     return all_filenames

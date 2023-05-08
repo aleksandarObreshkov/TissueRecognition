@@ -1,5 +1,5 @@
 import tensorflow as tf
-import keras
+from tensorflow import keras
 
 
 model_name = "tissue_recogniser"
@@ -40,4 +40,4 @@ def create_model():
     
 
 def load_model():
-    return tf.keras.models.load_model(model_name)
+    return keras.models.load_model(model_name)
