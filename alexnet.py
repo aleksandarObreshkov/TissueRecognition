@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow import keras
 
 
-model_name = "tissue_recogniser"
+model_name = "tissue_recogniser_1"
 
 
 def get_alexnet_model():

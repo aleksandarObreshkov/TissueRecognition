@@ -3,7 +3,7 @@ import tif_to_nii
 import os
 import SimpleITK as sitk
 
-small_train_filepath = f'{os.curdir}/Tumor samples/small_train.tfrecords' # A smaller file
+small_train_filepath = f'{os.curdir}/Tumor samples/train.tfrecords' # A smaller file
 
 def get_all_nii_images() -> list[str]:
     all_filenames = []
@@ -86,8 +86,8 @@ def make_record():
 
 
 def decode(serialized_example) -> tuple[tf.io.FixedLenFeature, tf.io.FixedLenFeature]:
-    features = tf.io.parse_example(
-        [serialized_example],
+    features = tf.io.parse_single_example(
+        serialized_example,
         features={'image': tf.io.FixedLenFeature([150528], tf.float32),
                   'label': tf.io.FixedLenFeature([1], tf.int64)})
 
@@ -98,10 +98,6 @@ def decode(serialized_example) -> tuple[tf.io.FixedLenFeature, tf.io.FixedLenFea
 
 
 def get_image_label_pairs_by_label() -> tuple[list[tf.io.FixedLenFeature], list[tf.io.FixedLenFeature]]:
-    filenames = [small_train_filepath]
-    dataset = tf.data.TFRecordDataset(filenames)
-    dataset = dataset.map(decode)
-
     adi_images = []
     adi_labels = []
 
@@ -129,8 +125,9 @@ def get_image_label_pairs_by_label() -> tuple[list[tf.io.FixedLenFeature], list[
     tum_images = []
     tum_labels = []
 
-    for data in dataset:
-        label = data[1][0].numpy()[0]
+    for data in  tf.data.TFRecordDataset([small_train_filepath]).map(decode):
+        label = data[1][0].numpy()
+        print(label)
         match label:
             case 1:
                 adi_images.append(data[0])
@@ -160,6 +157,21 @@ def get_image_label_pairs_by_label() -> tuple[list[tf.io.FixedLenFeature], list[
                 tum_images.append(data[0])
                 tum_labels.append(data[1])
 
-
+    # These arrays are stored into memory -> find a way to load this info directly into the model
     return ([adi_images, back_images, deb_images, lym_images, muc_images, mus_images, norm_images, str_images, tum_images],
     [adi_labels, back_labels, deb_labels, lym_labels, muc_labels, mus_labels, norm_labels, str_labels, tum_labels])
+
+def decode_single(bytes):
+    return tf.io.parse_single_example(
+      # Data
+      bytes,
+
+      # Schema
+     {'image': tf.io.FixedLenFeature([150528], tf.float32),
+                  'label': tf.io.FixedLenFeature([1], tf.int64)}
+  )
+
+if __name__=="__main__":
+    get_image_label_pairs_by_label()
+    for batch in tf.data.TFRecordDataset([small_train_filepath]).map(decode_single):
+        print(batch)
