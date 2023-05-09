@@ -3,28 +3,17 @@ import tif_to_nii
 import os
 import SimpleITK as sitk
 
-small_train_filepath = f'{os.curdir}/Tumor samples/train.tfrecords' # A smaller file
 
-def get_all_nii_images() -> list[str]:
+train_record_filename = f'{os.curdir}/records/training.tfrecords'
+validation_record_filename = f'{os.curdir}/records/validate.tfrecords'
+test_record_filename = f'{os.curdir}/records/test.tfrecords'
+
+
+def get_all_nii_images(root_dir) -> list[str]:
     all_filenames = []
-    root_dir = tif_to_nii.nii_dir
     for dir in os.listdir(root_dir):
         for image in os.listdir(f'{root_dir}/{dir}'):
             all_filenames.append(f'{root_dir}/{dir}/{image}')
-    return all_filenames
-
-
-#get the first 500 of each type so that debugging is faster
-def get_nii_images() -> list[str]:
-    all_filenames = []
-    counter = 0
-    root_dir = tif_to_nii.nii_dir
-    for dir in os.listdir(root_dir):
-        for image in os.listdir(f'{root_dir}/{dir}'):
-            counter += 1
-            if(counter == 200): break
-            all_filenames.append(f'{root_dir}/{dir}/{image}')
-        counter = 0
     return all_filenames
 
 
@@ -55,22 +44,20 @@ def get_proper_label(filename) -> int:
     return -1
 
 
-def make_record():
+def make_record(all_filenames, record_path):
 
-    print("Starting saving of TFRecords...")
+    print(f"Starting saving of TFRecord at '{record_path}'")
 
     # open the file
-    writer = tf.io.TFRecordWriter(small_train_filepath)
-
-    all_filenames = get_nii_images()
+    writer = tf.io.TFRecordWriter(record_path)
 
     # iterate through all .nii files:
-    for meta_data in all_filenames:
-        image_object = sitk.ReadImage(meta_data)
+    for filename in all_filenames:
+        image_object = sitk.ReadImage(filename)
 
         # Load the image and label
         img = sitk.GetArrayFromImage(image_object)
-        label = get_proper_label(meta_data)
+        label = get_proper_label(filename)
         
         # Create a feature
         feature = {'label': _int64_feature(label),
@@ -97,81 +84,35 @@ def decode(serialized_example) -> tuple[tf.io.FixedLenFeature, tf.io.FixedLenFea
     return features['image'], features['label']
 
 
-def get_image_label_pairs_by_label() -> tuple[list[tf.io.FixedLenFeature], list[tf.io.FixedLenFeature]]:
-    adi_images = []
-    adi_labels = []
+def resize_images(image, label):
+    # Normalize images to have a mean of 0 and standard deviation of 1
+    image = tf.image.per_image_standardization(image)
+    image = tf.image.resize(image, (227, 227))
+    return image, label
 
-    back_images = []
-    back_labels = []
 
-    deb_images = []
-    deb_labels = []
+def get_training_dataset():
+    return tf.data.TFRecordDataset([train_record_filename]).map(decode).map(resize_images).batch(10, drop_remainder=True)
 
-    lym_images = []
-    lym_labels = []
 
-    muc_images = []
-    muc_labels = []
+def get_validation_dataset():
+    return tf.data.TFRecordDataset([validation_record_filename]).map(decode).map(resize_images).batch(10, drop_remainder=True)
 
-    mus_images = []
-    mus_labels = []
 
-    norm_images = []
-    norm_labels = []
+def get_test_dataset():
+    return tf.data.TFRecordDataset([test_record_filename]).map(decode).map(resize_images).batch(10, drop_remainder=True)
 
-    str_images = []
-    str_labels = []
 
-    tum_images = []
-    tum_labels = []
+# if __name__=="__main__":
+  
+#     train_path = f'{os.curdir}/records/train'
+#     train_filenames = get_all_nii_images(train_path)
+#     make_record(train_filenames, train_record_filename)
 
-    for data in  tf.data.TFRecordDataset([small_train_filepath]).map(decode):
-        label = data[1][0].numpy()
-        print(label)
-        match label:
-            case 1:
-                adi_images.append(data[0])
-                adi_labels.append(data[1])
-            case 2:
-                back_images.append(data[0])
-                back_labels.append(data[1])
-            case 3:
-                deb_images.append(data[0])
-                deb_labels.append(data[1])
-            case 4:
-                lym_images.append(data[0])
-                lym_labels.append(data[1])
-            case 5:
-                muc_images.append(data[0])
-                muc_labels.append(data[1])
-            case 6:
-                mus_images.append(data[0])
-                mus_labels.append(data[1])
-            case 7:
-                norm_images.append(data[0])
-                norm_labels.append(data[1])
-            case 8:
-                str_images.append(data[0])
-                str_labels.append(data[1])
-            case 9:
-                tum_images.append(data[0])
-                tum_labels.append(data[1])
+#     validation_path = f'{os.curdir}/records/validate'
+#     validation_filenames = get_all_nii_images(validation_path)
+#     make_record(validation_filenames, validation_record_filename)
 
-    # These arrays are stored into memory -> find a way to load this info directly into the model
-    return ([adi_images, back_images, deb_images, lym_images, muc_images, mus_images, norm_images, str_images, tum_images],
-    [adi_labels, back_labels, deb_labels, lym_labels, muc_labels, mus_labels, norm_labels, str_labels, tum_labels])
-
-def decode_single(bytes):
-    return tf.io.parse_single_example(
-      # Data
-      bytes,
-
-      # Schema
-     {'image': tf.io.FixedLenFeature([150528], tf.float32),
-                  'label': tf.io.FixedLenFeature([1], tf.int64)}
-  )
-
-if __name__=="__main__":
-    get_image_label_pairs_by_label()
-    for batch in tf.data.TFRecordDataset([small_train_filepath]).map(decode_single):
-        print(batch)
+#     test_path = f'{os.curdir}/records/test'
+#     test_filenames = get_all_nii_images(test_path)
+#     make_record(test_filenames, test_record_filename)

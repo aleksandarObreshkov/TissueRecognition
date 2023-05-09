@@ -1,10 +1,12 @@
-from imio import load, save
 import os
+from imio import load, save
+
 
 dirs = ["ADI", "BACK", "DEB", "LYM", "MUC", "MUS", "NORM", "STR", "TUM"]
 #The following directories should be updated to the directories where the nii and tiff images are stored
-tiff_dir = f"f{os.curdir}/Tumor samples/tiff"
+tiff_dir = f"f{os.curdir}/Tumor samples/tif"
 nii_dir = f"{os.curdir}/Tumor samples/nii"
+
 
 def convert_all_images():
     for dir in dirs:

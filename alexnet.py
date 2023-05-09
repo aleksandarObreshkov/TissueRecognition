@@ -1,5 +1,7 @@
 import tensorflow as tf
 from tensorflow import keras
+import tf_records_repository as tf_repo
+import metrics
 
 
 model_name = "tissue_recogniser_1"
@@ -41,3 +43,18 @@ def create_model():
 
 def load_model():
     return keras.models.load_model(model_name)
+
+
+def train_model():
+    run_logdir = metrics.get_run_logdir()
+    tensorboard_cb = keras.callbacks.TensorBoard(run_logdir)
+
+    alexnet_model = create_model()
+    alexnet_model.fit(tf_repo.get_training_dataset(),
+                epochs=100,
+                validation_data=tf_repo.get_validation_dataset(),
+                validation_freq=1,
+                callbacks=[tensorboard_cb])
+    alexnet_model.evaluate(tf_repo.get_test_dataset())
+    alexnet_model.save(model_name)
+    return alexnet_model

@@ -3,8 +3,10 @@ from PIL import Image
 import SimpleITK as sitk
 import numpy as np
 
+
 folder_path = 'E:/Bioinformatics/Tumor samples/samples_tiff'
 extensions = []
+
 
 def test_files_are_valid():
     for fldr in os.listdir(folder_path):
@@ -17,6 +19,7 @@ def test_files_are_valid():
             if filee.split('.')[1] not in extensions:
                 extensions.append(filee.split('.')[1])
 
+
 def test_open_nii_file():
     for fldr in os.listdir(folder_path):
         sub_folder_path = f'{folder_path}/{fldr}'
@@ -27,4 +30,3 @@ def test_open_nii_file():
             array = sitk.GetArrayFromImage(im)
             print(array)
 
-test_open_nii_file()
