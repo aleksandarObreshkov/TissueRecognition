@@ -1,18 +1,19 @@
 import os
-import sys
 import numpy as np
 import alexnet
 import tensorflow as tf
 from tensorflow import keras
+from datasets import dirs
 
 
-def get_single_image_prediction(alexnet_model, image_path) -> int:
-
-    image = keras.preprocessing.image.load_img(image_path)
-
-    image_numpy = np.array(tf.keras.preprocessing.image.img_to_array(image))
-    image_numpy = np.resize(image_numpy, (1, 227, 227, 3))
-    return alexnet_model(image_numpy, training=False)
+def get_single_image_prediction(alexnet_model, image_path):
+    training_data_gen = tf.keras.preprocessing.image.ImageDataGenerator().flow_from_directory(directory=image_path,
+                                                            batch_size=1)
+    
+    res_from_single_image = alexnet_model(training_data_gen.next()[0])
+    print(res_from_single_image)
+    index = np.array(res_from_single_image).argmax()
+    return dirs[index]
 
 
 if __name__ == '__main__':
@@ -24,7 +25,6 @@ if __name__ == '__main__':
     else:
         print("Loading Alexnet from memory")
         alexnet_model = keras.models.load_model(alexnet.model_name)
+
+    print(get_single_image_prediction(alexnet_model, "C:\\Users\\aleks\\Desktop\\image"))
     
-    path = sys.argv[1]
-    prediction = get_single_image_prediction(alexnet_model, path)
-    print(prediction)
