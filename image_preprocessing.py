@@ -1,23 +1,27 @@
 import slideio
+from patchify import patchify, unpatchify
+from PIL import Image
+import numpy as np
 import tensorflow as tf
 
+IMAGE_SIZE = 50
 
-image_path = "C:\\Users\\aleks\\Desktop\\image\\big3.svs"
-scene = slideio.open_slide(image_path,'SVS').get_scene(0)
-print(scene.num_z_slices)
 
-(_, _, width, height) = scene.rect
-print(f'Height is {height} pixels and width is {width} pixels')
+def validate_large_image(cnn, large_image_path, validated_image_path):
+    image = Image.open(large_image_path)
+    image = np.array(image, dtype='float')
+    print(f"Image shape is: {image.shape}")
+    patches = patchify(image, (IMAGE_SIZE, IMAGE_SIZE, 3), step=IMAGE_SIZE)
+    (tiles_y, tiles_x, _, _, _, _) = patches.shape
+    print(f"Patches shape is: {patches.shape}")
 
-h = 0
-iterations = 0
-while h<height:
-    w = 0
-    while w<width:
-        block = scene.read_block((w, h, 224, 224), size=(0,0), channel_indices=[])
-        tf.keras.preprocessing.image.save_img(f"C:\\Users\\aleks\\Desktop\\image\\cuts\{iterations}.tif",
-                                              block)
-        w+=224
-        print(f"On {iterations} iteration")
-        iterations+=1
-    h+=224
+    for i in range(patches.shape[0]):
+        for j in range(patches.shape[1]):
+            patch = patches[i, j, 0]
+            result = cnn(np.reshape(patch, (1, IMAGE_SIZE, IMAGE_SIZE, 3)))
+            result = np.array(result)[0]
+            if result > 0.5: patch[...] = 255
+    
+    merged = unpatchify(patches, (tiles_y*IMAGE_SIZE, tiles_x*IMAGE_SIZE, 3))
+    merged = tf.keras.preprocessing.image.save_img(validated_image_path, merged)
+            

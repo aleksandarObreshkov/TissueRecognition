@@ -1,7 +1,8 @@
 __pycache__/
 logs/
 small_train.tfrecords
-tissue_recogniser/
+tissue_recogniser_*/
 TumorSamples/
 .vscode/
 records/
+utils/
