@@ -69,7 +69,7 @@ def train_model():
 
     alexnet_model = create_model()
     alexnet_model.fit(datasets.get_training_dataset(),
-                epochs=40,
+                epochs=100,
                 validation_data=datasets.get_validation_dataset(),
                 validation_freq=1,
                 callbacks=[callback])

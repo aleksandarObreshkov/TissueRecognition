@@ -1,12 +1,11 @@
 import tensorflow as tf
 
 
-dirs = ["ADI", "BACK", "DEB", "LYM", "MUC", "MUS", "NORM", "STR", "TUM"]
-samples_dir = "C:\\Users\\aleks\\Projects\\python\\Tissues\\IDC Breast Cancer"
+samples_dir = "C:\\Users\\aleks\\Projects\\Tissues\\IDC Breast Cancer Sorted"
 
 
 def get_training_dataset():
-    image_generator = tf.keras.preprocessing.image.ImageDataGenerator()
+    image_generator = tf.keras.preprocessing.image.ImageDataGenerator(horizontal_flip=True, vertical_flip=True, rotation_range=90)
     training_data_gen = image_generator.flow_from_directory(directory=f"{samples_dir}\\train",
                                                             batch_size=32, 
                                                             shuffle=True, 
