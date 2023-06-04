@@ -2,7 +2,7 @@ import os
 import alexnet
 from tensorflow import keras
 import image_processing
-
+import test
 
 if __name__ == '__main__':
     alexnet_model: keras.models.Model
@@ -14,9 +14,12 @@ if __name__ == '__main__':
         print("Loading Alexnet from memory")
         alexnet_model = keras.models.load_model(alexnet.model_name)
 
-    image_path = "C:\\Users\\aleks\\Desktop\\image\\testing\\sample4.png"
-    validated_image_path = "C:\\Users\\aleks\\Desktop\\image\\testing\\merged6.png"
+    image_path = "C:\\Users\\aleks\\Desktop\\image\\testing\\sample.tif"
+    validated_image_path = "C:\\Users\\aleks\\Desktop\\image\\testing\\merged.png"
+    filter_path = "C:\\Users\\aleks\\Desktop\\image\\testing\\filtered.png"
     validated_img = image_processing.analyze_image(alexnet_model, image_path, validated_image_path)
+    
     tumor_mask = image_processing.get_tumor_mask(validated_image_path)
     result = image_processing.apply_tumor_mask(image_path, tumor_mask)
-    result.show()
+    result.save(filter_path)
+    test.merge_filters(image_path, filter_path)
