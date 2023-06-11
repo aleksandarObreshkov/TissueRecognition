@@ -2,7 +2,7 @@ import os
 import alexnet
 from tensorflow import keras
 import image_processing
-import test
+
 
 if __name__ == '__main__':
     alexnet_model: keras.models.Model
@@ -20,6 +20,10 @@ if __name__ == '__main__':
     validated_img = image_processing.analyze_image(alexnet_model, image_path, validated_image_path)
     
     tumor_mask = image_processing.get_tumor_mask(validated_image_path)
-    result = image_processing.apply_tumor_mask(image_path, tumor_mask)
-    result.save(filter_path)
-    test.merge_filters(image_path, filter_path)
+    tumor_mask.save(filter_path)
+
+    filtered = image_processing.apply_tumor_mask(image_path, tumor_mask)
+    filtered.save(filter_path)
+
+    image_processing.outline_tumors(filter_path, image_path)
+
