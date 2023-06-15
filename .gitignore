@@ -6,3 +6,4 @@ TumorSamples/
 .vscode/
 records/
 utils/
+node_modules/

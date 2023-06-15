@@ -1,0 +1,21 @@
+.card {
+    flex:auto;
+    width: min-content;
+    height: min-content;
+    margin: 5px;
+}
+
+.cards-holder {
+    display: flex;
+}
+
+.menu {
+    display: flex;
+    justify-content: center; /* horizontal alignment*/
+    align-items: center; /* vertical alignment*/
+}
+
+.card-img-top {
+    height: 150px;
+    width: auto;
+}
