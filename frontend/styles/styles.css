@@ -27,6 +27,13 @@
 .scan {
     flex: auto;
     border-radius: 4px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: gray;
     background-color: lightgray;
     margin: 10px;
+}
+
+body {
+    padding: 2%;
 }

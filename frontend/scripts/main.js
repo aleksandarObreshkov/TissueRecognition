@@ -6,8 +6,9 @@ const HOME_PAGE = 'pages/index.html'
 
 function createWindow (htmlPage, args) {
   const mainWindow = new BrowserWindow({
+    useContentSize: true,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
     }
   })
   
