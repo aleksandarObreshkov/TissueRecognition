@@ -1,10 +1,15 @@
 import os
 import alexnet
+import utils
 from tensorflow import keras
 import image_processing
 
 
-if __name__ == '__main__':
+def scan(image_path):
+
+    curr_scan_dir = utils.make_new_dir()
+    utils.copy_original_in_scan_dir(image_path, curr_scan_dir)
+
     alexnet_model: keras.models.Model
 
     if alexnet.model_name not in os.listdir(os.curdir):
@@ -14,10 +19,13 @@ if __name__ == '__main__':
         print("Loading Alexnet from memory")
         alexnet_model = keras.models.load_model(alexnet.model_name)
 
-    image_path = "C:\\Users\\aleks\\Desktop\\image\\testing\\sample.tif"
-    validated_image_path = "C:\\Users\\aleks\\Desktop\\image\\testing\\merged.png"
-    filter_path = "C:\\Users\\aleks\\Desktop\\image\\testing\\filtered.png"
-    validated_img = image_processing.analyze_image(alexnet_model, image_path, validated_image_path)
+    validated_image_path = f"{curr_scan_dir}\\merged.png"
+    filter_path = f"{curr_scan_dir}\\filtered.png"
+
+    curr_scan_dir = utils.make_new_dir()
+    utils.copy_original_in_scan_dir(image_path, curr_scan_dir)
+
+    image_processing.analyze_image(alexnet_model, image_path, validated_image_path)
     
     tumor_mask = image_processing.get_tumor_mask(validated_image_path)
     tumor_mask.save(filter_path)
@@ -26,4 +34,6 @@ if __name__ == '__main__':
     filtered.save(filter_path)
 
     image_processing.outline_tumors(filter_path, image_path)
+
+    return curr_scan_dir
 

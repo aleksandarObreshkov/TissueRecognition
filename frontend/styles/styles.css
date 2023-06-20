@@ -1,8 +1,7 @@
-.card {
+.card, .card-body {
     flex:auto;
-    width: min-content;
-    height: min-content;
     margin: 5px;
+    width: fit-content;
 }
 
 .cards-holder {
@@ -37,3 +36,24 @@
 body {
     padding: 2%;
 }
+
+.scan-btn-col {
+    flex-grow: 2;
+    width: min-content;
+    height: min-content;
+    margin: 5px;
+}
+
+.files-btn-col {
+    flex-grow: 8;
+}
+
+.btn-holder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-upload>input {
+    display: none;
+  }
