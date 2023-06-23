@@ -9,7 +9,8 @@ def scan(image_path):
 
     curr_scan_dir = utils.make_new_dir()
     utils.copy_original_in_scan_dir(image_path, curr_scan_dir)
-
+    image_path = f"{curr_scan_dir}\\{utils.extract_last_element_from_path(image_path)}"
+    
     alexnet_model: keras.models.Model
 
     if alexnet.model_name not in os.listdir(os.curdir):
@@ -21,9 +22,6 @@ def scan(image_path):
 
     validated_image_path = f"{curr_scan_dir}\\merged.png"
     filter_path = f"{curr_scan_dir}\\filtered.png"
-
-    curr_scan_dir = utils.make_new_dir()
-    utils.copy_original_in_scan_dir(image_path, curr_scan_dir)
 
     image_processing.analyze_image(alexnet_model, image_path, validated_image_path)
     
