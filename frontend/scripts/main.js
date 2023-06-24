@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const fs = require('fs')
 const HOME_PAGE = 'pages/index.html'
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 
 function createWindow (htmlPage, args) {
@@ -28,7 +29,20 @@ function openNewWindow(event, htmlPage, args) {
 }
 
 async function readFiles(event, rootDir) {
+  console.log(rootDir)
   return fs.readdirSync(rootDir)
+}
+
+async function sendRequest(event, url, body) {
+  let responseData = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body)
+  });
+  const responseJson = await responseData.text()
+  return responseJson
 }
 
 app.whenReady().then(() => {
@@ -36,6 +50,7 @@ app.whenReady().then(() => {
   ipcMain.on('change-view', changeView);
   ipcMain.handle('read-files', readFiles)
   ipcMain.on('open-new-window', openNewWindow)
+  ipcMain.handle('HTTP:send-request', sendRequest)
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow(HOME_PAGE, null)

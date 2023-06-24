@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "bootstrap-icons": "^1.10.5",
+    "fetch": "^1.1.0",
     "query-string": "^8.1.0",
     "querystring": "^0.2.1"
   }
