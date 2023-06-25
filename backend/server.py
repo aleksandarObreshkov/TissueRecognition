@@ -1,8 +1,10 @@
 from flask import Flask, request, Response
 import main
+import os
 import utils
 
 app = Flask(__name__)
+# add env reading and setting
 
 @app.route('/scan', methods=['POST'])
 def scan_image():
