@@ -15,7 +15,7 @@ if alexnet.model_name not in os.listdir("C:\\Users\\aleks\\Projects\\IDC_Finder\
     alexnet_model = alexnet.train_model()
 else:
     print("Loading Alexnet from memory")
-    alexnet_model = keras.models.load_model(f'C:\\Users\\aleks\\Projects\\IDC_Finder\\frontend\\{alexnet.model_name}')
+    alexnet_model = keras.models.load_model(f'C:\\Users\\aleks\\Projects\\IDC_Finder\\frontend\\dist\\server\\{alexnet.model_name}')
 
 @app.route('/scan', methods=['POST'])
 def scan_image():

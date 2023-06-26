@@ -3,7 +3,9 @@ import image_processing
 
 
 def scan(image_path, model):
-    curr_scan_dir = utils.make_new_dir()
+    image_name = utils.extract_last_element_from_path(image_path)
+    image_name = utils.remove_file_extension(image_name)
+    curr_scan_dir = utils.make_new_dir(image_name)
     original_image_path = copy_original_to_scan_dir(image_path, curr_scan_dir)
 
     validated_image_path = f"{curr_scan_dir}\\merged.png"

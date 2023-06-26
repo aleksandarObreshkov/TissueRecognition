@@ -16,6 +16,11 @@ function createWindow (htmlPage, args) {
   
   mainWindow.loadFile(htmlPage)
     .then(() => mainWindow.webContents.send("image-window-args", args))
+    .then(() => {
+      if(args!=null) {
+        mainWindow.setTitle(args[0])
+      }
+    })
     .then(() => mainWindow.show())
 }
 
