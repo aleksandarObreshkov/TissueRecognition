@@ -8,3 +8,7 @@ records/
 utils/
 node_modules/
 past_scans
+out/
+dist/
+build/
+electron-win32-x64/

@@ -10,12 +10,12 @@ app = Flask(__name__)
 
 alexnet_model: keras.models.Model
 
-if alexnet.model_name not in os.listdir(os.curdir):
+if alexnet.model_name not in os.listdir("C:\\Users\\aleks\\Projects\\IDC_Finder\\frontend\\dist\\server"):
     print("Creating Alexnet model")
     alexnet_model = alexnet.train_model()
 else:
     print("Loading Alexnet from memory")
-    alexnet_model = keras.models.load_model(alexnet.model_name)
+    alexnet_model = keras.models.load_model(f'C:\\Users\\aleks\\Projects\\IDC_Finder\\frontend\\{alexnet.model_name}')
 
 @app.route('/scan', methods=['POST'])
 def scan_image():

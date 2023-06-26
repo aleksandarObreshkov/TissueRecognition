@@ -2,7 +2,7 @@ from tensorflow import keras
 import datasets
 import metrics
 
-model_name = "tissue_recogniser_idc"
+model_name = "dist\\server\\tissue_recogniser_idc"
 
 
 class accuracy_callback(keras.callbacks.Callback):

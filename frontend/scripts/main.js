@@ -3,6 +3,7 @@ const path = require('path')
 const fs = require('fs')
 const HOME_PAGE = 'pages/index.html'
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const { exec } = require('node:child_process');
 
 
 function createWindow (htmlPage, args) {
@@ -46,6 +47,8 @@ async function sendRequest(event, url, body) {
 }
 
 app.whenReady().then(() => {
+  exec(`start ${app.getAppPath()}\\dist\\server\\server.exe`); 
+
   createWindow(HOME_PAGE, null);
   ipcMain.on('change-view', changeView);
   ipcMain.handle('read-files', readFiles)
