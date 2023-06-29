@@ -3,25 +3,31 @@ const path = require('path')
 const fs = require('fs')
 const HOME_PAGE = 'pages/index.html'
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-const { exec } = require('node:child_process');
+const { exec } = require('node:child_process')
+const express = require('express')
 
+let  mainWindow;
+let api = express()
+api.use(express.json())
 
 function createWindow (htmlPage, args) {
-  const mainWindow = new BrowserWindow({
+  let window = new BrowserWindow({
+    height:650,
+    width:1200,
     useContentSize: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     }
   })
   
-  mainWindow.loadFile(htmlPage)
-    .then(() => mainWindow.webContents.send("image-window-args", args))
+  window.loadFile(htmlPage)
+    .then(() => window.webContents.send("image-window-args", args))
     .then(() => {
       if(args!=null) {
-        mainWindow.setTitle(args[0])
+        window.setTitle(args[0])
       }
     })
-    .then(() => mainWindow.show())
+    return window
 }
 
 function changeView(event, htmlPage) {
@@ -31,11 +37,11 @@ function changeView(event, htmlPage) {
 }
 
 function openNewWindow(event, htmlPage, args) {
-  createWindow(htmlPage, args)
+  let newWindow = createWindow(htmlPage, args)
+  newWindow.show()
 }
 
 async function readFiles(event, rootDir) {
-  console.log(rootDir)
   return fs.readdirSync(rootDir)
 }
 
@@ -47,18 +53,40 @@ async function sendRequest(event, url, body) {
     },
     body: JSON.stringify(body)
   });
-  const responseJson = await responseData.text()
-  return responseJson
+  const scanDir = await responseData.text()
+  const status = responseData.status
+  if(status != 202) {
+    console.log("Something went wrong")
+  }
+  return scanDir
 }
 
-app.whenReady().then(() => {
-  exec(`start ${app.getAppPath()}\\dist\\server\\server.exe`); 
 
-  createWindow(HOME_PAGE, null);
+app.whenReady().then(() => {
+  //exec(`start ${app.getAppPath()}\\dist\\server\\server.exe`); 
+
+
+  mainWindow = createWindow(HOME_PAGE, null);
   ipcMain.on('change-view', changeView);
   ipcMain.handle('read-files', readFiles)
   ipcMain.on('open-new-window', openNewWindow)
   ipcMain.handle('HTTP:send-request', sendRequest)
+
+  api.listen(5001, () => {
+    console.log("Express is running on port 5001")
+  })
+
+  api.post('/update', function(req, res) {
+    let completedScanName = req.body.completedScan
+    mainWindow.webContents.send('scan-update', completedScanName)
+    res.sendStatus(200)
+  })
+
+  api.post('/ready', function(req, res) {
+    console.log("Backend ready")
+    //mainWindow.show()
+    res.sendStatus(200)
+  })
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow(HOME_PAGE, null)

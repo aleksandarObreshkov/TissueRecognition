@@ -1,7 +1,16 @@
+html {
+    height: 100%;
+    width: 100%;
+}
+body {
+    height: 100%;
+    width: 100%;
+}
+
 .card, .card-body {
     flex:auto;
     margin: 5px;
-    width: fit-content;
+    width: 100%;
 }
 
 .cards-holder {
@@ -12,6 +21,7 @@
     display: flex;
     justify-content: center; /* horizontal alignment*/
     align-items: center; /* vertical alignment*/
+    height: 100%;
 }
 
 .card-img-top {
