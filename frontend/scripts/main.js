@@ -4,7 +4,7 @@ const fs = require('fs')
 const HOME_PAGE = 'pages/index.html'
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const { exec } = require('node:child_process')
-const express = require('express')
+const express = require('express');
 
 let  mainWindow;
 let api = express()
@@ -17,7 +17,8 @@ function createWindow (htmlPage, args) {
     useContentSize: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-    }
+    },
+    show: false
   })
   
   window.loadFile(htmlPage)
@@ -61,7 +62,6 @@ async function sendRequest(event, url, body) {
   return scanDir
 }
 
-
 app.whenReady().then(() => {
   //exec(`start ${app.getAppPath()}\\dist\\server\\server.exe`); 
 
@@ -84,19 +84,34 @@ app.whenReady().then(() => {
 
   api.post('/ready', function(req, res) {
     console.log("Backend ready")
-    //mainWindow.show()
+    mainWindow.show()
     res.sendStatus(200)
   })
 
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow(HOME_PAGE, null)
   })
+
+  mainWindow.on('close', () => {
+    sendCloseSignalToServer()
+  })
 })
 
 app.on('exit', () => {
-  BrowserWindow.getAllWindows().forEach((w) => w.close())
+  closeAllWindows()
 })
 
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
 })
+
+function closeAllWindows() {
+  BrowserWindow.getAllWindows().forEach((w) => w.close())
+}
+
+async function sendCloseSignalToServer() {
+  const response = await fetch('http://127.0.0.1:5000/quit', {method: "POST"})
+  if (response.status == 200) {
+    closeAllWindows()
+  }
+}
