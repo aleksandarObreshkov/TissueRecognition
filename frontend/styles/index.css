@@ -1,0 +1,49 @@
+html {
+    height: 100%;
+    width: 100%;
+}
+
+.main-window{
+    height: 100%;
+    width: 100%;
+    padding: 2%;
+}
+
+.menu {
+    display: flex;
+    justify-content: center; /* horizontal alignment*/
+    align-items: center; /* vertical alignment*/
+    height: 100%;
+}
+
+.cards-holder {
+    display: flex;
+}
+
+.card, .card-body {
+    flex:auto;
+    margin: 5px;
+    width: 100%;
+}
+
+.card-img-top {
+    height: 150px;
+    width: auto;
+}
+
+.btn-holder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.scan-btn-col {
+    flex-grow: 2;
+    width: min-content;
+    height: min-content;
+    margin: 5px;
+}
+
+.files-btn-col {
+    flex-grow: 8;
+}

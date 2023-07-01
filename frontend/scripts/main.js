@@ -18,7 +18,7 @@ function createWindow (htmlPage, args) {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
-    show: false
+    //show: false
   })
   
   window.loadFile(htmlPage)

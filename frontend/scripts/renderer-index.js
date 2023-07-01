@@ -34,7 +34,7 @@ scanButton.addEventListener('click', () => {
 })
 
 viewPastScansButton.addEventListener('click', () => {
-  window.electronAPI.changeView("pages/pastScans.html")
+  window.electronAPI.changeView("pages/past-scans.html")
 })
 
 async function makeHttpCall(files) {
@@ -44,7 +44,7 @@ async function makeHttpCall(files) {
 }
 
 function showScan(timestamp) {
-  window.electronAPI.openNewWindow('pages/singleScan.html', [timestamp]);
+  window.electronAPI.openNewWindow('pages/single-scan.html', [timestamp]);
 }
 
 function addNewScanToProcessingList(scanDir) {

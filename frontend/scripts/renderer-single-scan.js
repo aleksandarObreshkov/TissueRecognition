@@ -18,6 +18,7 @@ async function createImages(timestamp) {
         let carouselImageDir = ROOT_DIR + '\\' + timestamp + "\\" + scan
         carouselImage.classList.add('d-block')
         carouselImage.classList.add('w-100')
+        carouselImage.classList.add('carousel-image')
         carouselImage.setAttribute('src', carouselImageDir)
 
         carouselImageDiv.appendChild(carouselImage)

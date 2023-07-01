@@ -26,6 +26,6 @@ function createNewTileForImage(scanTimestamp) {
 }
 
 function showScan(timestamp) {
-    window.electronAPI.openNewWindow('pages/singleScan.html', [timestamp]);
+    window.electronAPI.openNewWindow('pages/single-scan.html', [timestamp]);
 }
 

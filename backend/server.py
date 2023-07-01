@@ -18,10 +18,11 @@ def inform_ready():
             raise ConnectionError(f"Status code was {response.status_code}, expected 200")
     except ConnectionRefusedError as cre:
         print(f"Connection error: {cre}")
+        close_app()
     except Exception as err:
         print(f"Something went wrong: {err}")
-    finally:
         close_app()
+
 
 running_scans = []
 
