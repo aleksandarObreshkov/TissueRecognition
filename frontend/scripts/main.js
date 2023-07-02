@@ -19,7 +19,7 @@ function createWindow (htmlPage, args) {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
-    show: true
+    show: false
   })
   
   window.loadFile(htmlPage)
@@ -63,7 +63,7 @@ async function sendRequestForScan(event, body) {
   
     const scanDir = await responseData.text()
     const status = responseData.status
-    const expectedStatus = 202
+    const expectedStatus = 201
     if(status != expectedStatus) {
       throw new Error(`Status was ${status}. Expected ${expectedStatus}`)
     }

@@ -1,6 +1,7 @@
 from tensorflow import keras
 import datasets
 import metrics
+from os import listdir
 
 model_name = "tissue_recogniser_idc"
 
@@ -12,7 +13,7 @@ class accuracy_callback(keras.callbacks.Callback):
             self.model.stop_training =True
 
 
-def get_alexnet_model():
+def get_alexnet_network_model():
     return keras.models.Sequential([
         keras.layers.Resizing(50, 50),
         keras.layers.Rescaling(1./255),
@@ -48,7 +49,7 @@ def get_alexnet_model():
 
 
 def create_model():
-    alexnet_model = get_alexnet_model()
+    alexnet_model = get_alexnet_network_model()
     alexnet_model.build((1, 50, 50, 3))
     alexnet_model.summary()
     alexnet_model.compile(loss='binary_crossentropy', 
@@ -76,3 +77,14 @@ def train_model():
     alexnet_model.evaluate(datasets.get_test_dataset())
     alexnet_model.save(model_name)
     return alexnet_model
+
+
+def get_alexnet_model(cnn_model_name):
+    m: keras.models.Model
+    if cnn_model_name not in listdir("C:\\Users\\aleks\\Projects\\IDC_Finder\\frontend\\dist\\server"):
+        print("Creating Alexnet model")
+        m = train_model()
+    else:
+        print("Loading Alexnet from memory")
+        m = keras.models.load_model(f'C:\\Users\\aleks\\Projects\\IDC_Finder\\frontend\\dist\\server\\{cnn_model_name}')
+    return m
