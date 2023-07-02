@@ -5,10 +5,11 @@ const HOME_PAGE = 'pages/index.html'
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const { exec } = require('node:child_process')
 const express = require('express');
+const BACKEND_URL = "http://127.0.0.1:5000"
 
 let  mainWindow;
-let api = express()
-api.use(express.json())
+let electron_rest_api = express()
+electron_rest_api.use(express.json())
 
 function createWindow (htmlPage, args) {
   let window = new BrowserWindow({
@@ -18,7 +19,7 @@ function createWindow (htmlPage, args) {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
-    show: false
+    show: true
   })
   
   window.loadFile(htmlPage)
@@ -29,6 +30,10 @@ function createWindow (htmlPage, args) {
       }
     })
     return window
+}
+
+function closeAllWindows() {
+  BrowserWindow.getAllWindows().forEach((w) => w.close())
 }
 
 function changeView(event, htmlPage) {
@@ -46,20 +51,35 @@ async function readFiles(event, rootDir) {
   return fs.readdirSync(rootDir)
 }
 
-async function sendRequest(event, url, body) {
-  let responseData = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body)
-  });
-  const scanDir = await responseData.text()
-  const status = responseData.status
-  if(status != 202) {
-    console.log("Something went wrong")
+async function sendRequestForScan(event, body) {
+  try {
+    let responseData = await fetch(`${BACKEND_URL}/scan`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body)
+    });
+  
+    const scanDir = await responseData.text()
+    const status = responseData.status
+    if(status!=202) {
+      console.error(`Status was ${status}, but expected 202`)
+      return null
+    }
+    return scanDir
+  } catch(err) {
+    console.error(`Error while sending scan request. Error: ${err}`)
+    return null
   }
-  return scanDir
+  
+}
+
+async function sendCloseSignalToServer() {
+  const response = await fetch(`${BACKEND_URL}/quit`, {method: "POST"})
+  if (response.status == 200) {
+    closeAllWindows()
+  }
 }
 
 app.whenReady().then(() => {
@@ -70,19 +90,19 @@ app.whenReady().then(() => {
   ipcMain.on('change-view', changeView);
   ipcMain.handle('read-files', readFiles)
   ipcMain.on('open-new-window', openNewWindow)
-  ipcMain.handle('HTTP:send-request', sendRequest)
+  ipcMain.handle('HTTP:send-request', sendRequestForScan)
 
-  api.listen(5001, () => {
+  electron_rest_api.listen(5001, () => {
     console.log("Express is running on port 5001")
   })
 
-  api.post('/update', function(req, res) {
+  electron_rest_api.post('/update', function(req, res) {
     let completedScanName = req.body.completedScan
     mainWindow.webContents.send('scan-update', completedScanName)
     res.sendStatus(200)
   })
 
-  api.post('/ready', function(req, res) {
+  electron_rest_api.post('/ready', function(req, res) {
     console.log("Backend ready")
     mainWindow.show()
     res.sendStatus(200)
@@ -104,14 +124,3 @@ app.on('exit', () => {
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
 })
-
-function closeAllWindows() {
-  BrowserWindow.getAllWindows().forEach((w) => w.close())
-}
-
-async function sendCloseSignalToServer() {
-  const response = await fetch('http://127.0.0.1:5000/quit', {method: "POST"})
-  if (response.status == 200) {
-    closeAllWindows()
-  }
-}

@@ -2,9 +2,15 @@ const fileUpload = document.getElementById('formFileMultiple');
 const viewPastScansButton = document.getElementById('viewPastScansButton');
 const scanButton = document.getElementById('scanButton')
 const processingList = document.getElementById('processingList')
-
+const alert_banner = document.getElementById('alert')
+const alert_button = document.getElementById('alert-button')
+const alert_message_holder = document.getElementById('error-message')
 
 let filesToScan = []
+
+alert_button.addEventListener('click', () => {
+  alert_banner.hidden = true
+})
 
 fileUpload.addEventListener('change', () => {
   const files = fileUpload.files
@@ -27,8 +33,13 @@ window.electronAPI.updateScan((event, scanName)=> {
 scanButton.addEventListener('click', () => {
   makeHttpCall(filesToScan)
   .then((response) => {
-    console.log(`Response from HTTP was ${response}`)
-    addNewScanToProcessingList(response)
+    if (response!=null) {
+      console.log(`Response from HTTP was ${response}`)
+      addNewScanToProcessingList(response)
+    }
+    else {
+      displayAlertWithMessage("Error ocurred while communicating with the backend.")
+    }
   })
   reset_input()
 })
@@ -38,7 +49,7 @@ viewPastScansButton.addEventListener('click', () => {
 })
 
 async function makeHttpCall(files) {
-  let currDir = await window.electronAPI.sendRequest('http://127.0.0.1:5000/scan', files)
+  let currDir = await window.electronAPI.sendRequestForScan('http://127.0.0.1:5000/scan', files)
   filesToScan = []
   return currDir
 }
@@ -73,4 +84,9 @@ function reset_input() {
   fileUpload.value = null
   filesToScan = [];
   scanButton.disabled=true
+}
+
+function displayAlertWithMessage(message) {
+  alert_message_holder.textContent = message
+  alert_banner.hidden = false
 }
