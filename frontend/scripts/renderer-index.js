@@ -38,10 +38,16 @@ viewPastScansButton.addEventListener('click', () => {
   window.electronAPI.changeView("pages/past-scans.html")
 })
 
+window.electronAPI.receiveCurrentlyScanning((event, currentlyScanning) => {
+  for (let scan of currentlyScanning) {
+    addNewScanToProcessingList(scan)
+  }
+})
+
 window.electronAPI.updateScan((event, scanName)=> {
+  console.log("In scan update:"+scanName)
   let currentScanDiv = document.getElementById(scanName)
   processingList.removeChild(currentScanDiv)
-  console.log("In scan update:"+scanName)
   showScan(scanName)
 })
 
@@ -61,7 +67,7 @@ function showScan(timestamp) {
 }
 
 function addNewScanToProcessingList(scanDir) {
-  console.log("Adding new scan to the list")
+  console.log(`Adding new scan to the list: ${scanDir}`)
   let wrapperDiv = document.createElement('div')
   wrapperDiv.setAttribute('id', scanDir)
   wrapperDiv.style.display = 'flex'

@@ -7,9 +7,20 @@ const { exec } = require('node:child_process')
 const express = require('express');
 const BACKEND_URL = "http://127.0.0.1:5000"
 
+let current_scans = []
+
 let  mainWindow;
 let electron_rest_api = express()
 electron_rest_api.use(express.json())
+
+function removeScanFromCurrentScans(scan) {
+  let index = current_scans.indexOf(scan)
+  if (index == -1) {
+    console.error("Error: Inconsistency. Trying to remove a scan which does not exist in frontend.")
+    return null;
+  }
+  current_scans.splice(index, 1);
+}
 
 function createWindow (htmlPage, args) {
   let window = new BrowserWindow({
@@ -39,7 +50,13 @@ function closeAllWindows() {
 function changeView(event, htmlPage) {
   const webContents = event.sender;
   const win = BrowserWindow.fromWebContents(webContents);
-  win.loadFile(htmlPage);
+  win.loadFile(htmlPage)
+
+  win.webContents.on('did-finish-load', () => {
+    if (htmlPage == 'pages/index.html') {
+      mainWindow.webContents.send('currently-scanning', current_scans)
+    }
+  });
 }
 
 function openNewWindow(event, htmlPage, args) {
@@ -61,12 +78,14 @@ async function sendRequestForScan(event, body) {
       body: JSON.stringify(body)
     });
   
-    const scanDir = await responseData.text()
-    const status = responseData.status
+    let scanDir = await responseData.text()
+    let status = responseData.status
     const expectedStatus = 201
     if(status != expectedStatus) {
       throw new Error(`Status was ${status}. Expected ${expectedStatus}`)
     }
+
+    current_scans.push(scanDir)
     return scanDir
   } catch(err) {
     console.error(`Error while sending scan request. Message: ${err}`)
@@ -109,6 +128,7 @@ app.whenReady().then(() => {
   electron_rest_api.post('/update', function(req, res) {
     let completedScanName = req.body.completedScan
     mainWindow.webContents.send('scan-update', completedScanName)
+    removeScanFromCurrentScans(completedScanName)
     res.sendStatus(200)
   })
 
