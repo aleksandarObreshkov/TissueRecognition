@@ -23,22 +23,12 @@ fileUpload.addEventListener('change', () => {
   }
 })
 
-window.electronAPI.updateScan((event, scanName)=> {
-  let currentScanDiv = document.getElementById(scanName)
-  processingList.removeChild(currentScanDiv)
-  console.log("In scan update:"+scanName)
-  showScan(scanName)
-})
-
 scanButton.addEventListener('click', () => {
   makeHttpCall(filesToScan)
   .then((response) => {
     if (response!=null) {
       console.log(`Response from HTTP was ${response}`)
       addNewScanToProcessingList(response)
-    }
-    else {
-      displayAlertWithMessage("Error ocurred while communicating with the backend.")
     }
   })
   reset_input()
@@ -48,8 +38,20 @@ viewPastScansButton.addEventListener('click', () => {
   window.electronAPI.changeView("pages/past-scans.html")
 })
 
+window.electronAPI.updateScan((event, scanName)=> {
+  let currentScanDiv = document.getElementById(scanName)
+  processingList.removeChild(currentScanDiv)
+  console.log("In scan update:"+scanName)
+  showScan(scanName)
+})
+
+window.electronAPI.showErrorBanner((event, err) => {
+  console.log(err)
+  displayAlertWithMessage(err)
+})
+
 async function makeHttpCall(files) {
-  let currDir = await window.electronAPI.sendRequestForScan('http://127.0.0.1:5000/scan', files)
+  let currDir = await window.electronAPI.sendRequestForScan(files)
   filesToScan = []
   return currDir
 }

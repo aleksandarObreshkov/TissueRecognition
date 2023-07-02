@@ -63,28 +63,38 @@ async function sendRequestForScan(event, body) {
   
     const scanDir = await responseData.text()
     const status = responseData.status
-    if(status!=202) {
-      console.error(`Status was ${status}, but expected 202`)
-      return null
+    const expectedStatus = 202
+    if(status != expectedStatus) {
+      throw new Error(`Status was ${status}. Expected ${expectedStatus}`)
     }
     return scanDir
   } catch(err) {
-    console.error(`Error while sending scan request. Error: ${err}`)
+    console.error(`Error while sending scan request. Message: ${err}`)
+    mainWindow.webContents.send('show-error-banner', "Error while sending scan request.")
     return null
   }
   
 }
 
 async function sendCloseSignalToServer() {
-  const response = await fetch(`${BACKEND_URL}/quit`, {method: "POST"})
-  if (response.status == 200) {
-    closeAllWindows()
+  try {
+    const expectedStatus = 200
+    const response = await fetch(`${BACKEND_URL}/quit`, {method: "POST"})
+    if (response.status == expectedStatus) {
+      closeAllWindows()
+    }
+    else {
+      throw new Error(`Status was ${response.status}. Expected ${expectedStatus}`)
+    }
+  } catch(err) {
+    console.error(`Error while trying to close the backend. Message: ${err}`)
+    mainWindow.webContents.send('show-error-banner', "Could not close backend.")
   }
+  
 }
 
 app.whenReady().then(() => {
   //exec(`start ${app.getAppPath()}\\dist\\server\\server.exe`); 
-
 
   mainWindow = createWindow(HOME_PAGE, null);
   ipcMain.on('change-view', changeView);
