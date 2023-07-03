@@ -18,16 +18,40 @@ def analyze_image(cnn, large_image_path, validated_image_path):
     (tiles_y, tiles_x, _, _, _, _) = patches.shape
     print(f"Patches shape is: {patches.shape}")
 
-    for i in range(patches.shape[0]):
-        for j in range(patches.shape[1]):
-            patch = patches[i, j, 0]
-            result = cnn(np.reshape(patch, (1, IMAGE_SIZE, IMAGE_SIZE, 3))) #i believe this can be optimised
-            result = np.array(result)[0]
-            if result > 0.7: patch[...] = 0
-    
+    patches_arr = flatten_patches(patches)
+    patches_results = run_patch_batches_in_nn(patches_arr, cnn)
+    binarise_patches(patches_arr, patches_results)
+
     merged = unpatchify(patches, (tiles_y*IMAGE_SIZE, tiles_x*IMAGE_SIZE, 3))
     tf.keras.preprocessing.image.save_img(validated_image_path, merged)
     return merged
+
+
+def flatten_patches(patches):
+    patches_arr = []
+    for i in range(patches.shape[0]):
+        for j in range(patches.shape[1]):
+            patch = patches[i, j, 0]
+            patches_arr.append(patch)
+    return patches_arr
+
+
+def run_patch_batches_in_nn(patches_arr, cnn):
+    batch_size = 32
+    patches_results = []
+    for index in range(0, len(patches_arr), batch_size):
+         sub_arr = patches_arr[index:index+batch_size]
+         results = cnn(np.array(sub_arr))
+         patches_results.extend(results)
+    return patches_results
+
+
+def binarise_patches(patches_arr, patches_results):
+    it = 0
+    for patch_result in patches_results:
+         if patch_result>0.7: patches_arr[it][...] = 0
+         it+=1
+
 
 # Results in a smoothed-out binary image of the pixelated one with white for tumors and black for non-tumorous cells
 def get_tumor_mask(analyzed_image_path):
