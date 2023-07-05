@@ -76,8 +76,8 @@ def get_tumor_mask(analyzed_image_path):
 
 # Thresholds the smoothed binary image and draws contours
 def outline_tumors(filtered_img_path, original_img_path, result_path):
-    filtered_image = cv2.imread(filtered_img_path)
-    original_image = cv2.imread(original_img_path)
+    filtered_image = np.array(Image.open(filtered_img_path))
+    original_image = np.array(Image.open(original_img_path))
 
     shifted = cv2.pyrMeanShiftFiltering(filtered_image, 21, 51)
     gray = cv2.cvtColor(shifted, cv2.COLOR_BGR2GRAY)
