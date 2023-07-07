@@ -7,8 +7,20 @@ import signal
 #ROOT_DIR = os.getenv('ROOTDIR')
 ROOT_DIR = "C:\\Users\\aleks\\Projects\\IDC_Finder\\past_scans"
 
+def make_new_dir_from_path(image_path):
+    image_name = extract_last_element_from_path(image_path)
+    image_name = remove_file_extension(image_name)
+    curr_scan_dir = make_new_dir_from_name(image_name)
+    return (copy_original_to_scan_dir(image_path, curr_scan_dir), curr_scan_dir)
 
-def make_new_dir(image_name):
+
+def copy_original_to_scan_dir(image_path, scan_dir):
+    copy_original_in_scan_dir(image_path, scan_dir)
+    original_image_path = f"{scan_dir}\\{extract_last_element_from_path(image_path)}"
+    return original_image_path
+
+
+def make_new_dir_from_name(image_name):
     curtime = datetime.datetime.now().strftime('%Y%m%dT%H%M%S')
     new_dir = f'{ROOT_DIR}\\{curtime}-{image_name}'
     os.mkdir(new_dir)

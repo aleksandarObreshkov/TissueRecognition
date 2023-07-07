@@ -77,14 +77,14 @@ async function sendRequestForScan(event, body) {
       },
       body: JSON.stringify(body)
     });
-  
-    let scanDir = await responseData.text()
+
     let status = responseData.status
     const expectedStatus = 201
     if(status != expectedStatus) {
       throw new Error(`Status was ${status}. Expected ${expectedStatus}`)
     }
-
+  
+    let scanDir = await responseData.text()
     current_scans.push(scanDir)
     return scanDir
   } catch(err) {

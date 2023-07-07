@@ -10,9 +10,15 @@ alexnet_model = alexnet.get_alexnet_model(alexnet.model_name)
 
 @server.route('/scan', methods=['POST'])
 def scan_image():
-    image_path = request.get_json()
-    curr_scan_path = main.start_scan(image_path[0], alexnet_model)
-    return Response(curr_scan_path, status=201)
+    try:
+        image_path = request.get_json()
+        original_image_path, curr_scan_dir = utils.make_new_dir_from_path(image_path[0])
+        curr_scan_path = utils.extract_last_element_from_path(curr_scan_dir)
+        main.start_scan_in_thread(original_image_path, curr_scan_dir, alexnet_model)
+        return Response(curr_scan_path, status=201)
+    except RuntimeError as err:
+        print(f'Error ocurred while scanning the image: {err}')
+        return Response(curr_scan_path, status=500)
 
 
 @server.route('/quit', methods=['POST'])
