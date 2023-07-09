@@ -127,7 +127,7 @@ app.whenReady().then(() => {
 
   electron_rest_api.post('/update', function(req, res) {
     let completedScanName = req.body.completedScan
-    mainWindow.webContents.send('scan-update', completedScanName)
+    mainWindow.webContents.send('scan-update:SUCCESS', completedScanName)
     removeScanFromCurrentScans(completedScanName)
     res.sendStatus(200)
   })
@@ -135,6 +135,16 @@ app.whenReady().then(() => {
   electron_rest_api.post('/ready', function(req, res) {
     console.log("Backend ready")
     mainWindow.show()
+    res.sendStatus(200)
+  })
+
+  electron_rest_api.post('/failed', function(req, res) {
+    let failedScanName = req.body.failedScan
+    let exception = req.body.errorMessage
+
+    console.log(`Scan ${failedScanName} failed.`)
+    mainWindow.webContents.send('scan-update:ERROR', failedScanName, exception)
+    removeScanFromCurrentScans(failedScanName)
     res.sendStatus(200)
   })
 

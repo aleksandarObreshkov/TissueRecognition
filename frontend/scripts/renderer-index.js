@@ -51,6 +51,14 @@ window.electronAPI.updateScan((event, scanName)=> {
   showScan(scanName)
 })
 
+window.electronAPI.errorScan((event, scanName, errorMessage) => {
+  console.log("In scan error: "+scanName+ ". Error message: "+errorMessage)
+  let currentScanDiv = document.getElementById(scanName)
+  let imageName = scanName.substring(scanName.indexOf("-")+1) //removes the timestamp from the name
+  displayAlertWithMessage(`Scanning of image ${imageName} failed. Reason: ${errorMessage}`)
+  processingList.removeChild(currentScanDiv)
+})
+
 window.electronAPI.showErrorBanner((event, err) => {
   console.log(err)
   displayAlertWithMessage(err)
