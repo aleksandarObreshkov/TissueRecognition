@@ -47,3 +47,9 @@ html {
 .files-btn-col {
     flex-grow: 8;
 }
+
+.cancel-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;  
+}

@@ -91,6 +91,18 @@ function addNewScanToProcessingList(scanDir) {
   spinner.style.width='24px'
   spinner.style.height='24px'
 
+  let icon = document.createElement('i')
+  icon.classList.add('fa-solid', 'fa-xmark')
+  icon.style.width = '20px'
+  icon.style.height = '20px'
+
+  let button = document.createElement('button')
+  button.classList.add('btn', 'btn-outline-danger', 'cancel-btn')
+  button.style.width = "24px"
+  button.style.height = "24px"
+  button.appendChild(icon)
+
+  wrapperDiv.appendChild(button)
   wrapperDiv.appendChild(scanName)
   wrapperDiv.appendChild(spinner)
   processingList.appendChild(wrapperDiv)
