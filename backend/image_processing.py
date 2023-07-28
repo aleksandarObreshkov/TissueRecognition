@@ -1,13 +1,17 @@
-import slideio
-from scipy import ndimage
 from patchify import patchify, unpatchify
 from PIL import Image, ImageFilter
 import numpy as np
 import tensorflow as tf
 import cv2
 import imutils
+import merger
 
-IMAGE_SIZE = 10
+gpus = tf.config.list_physical_devices('GPU')
+tf.config.experimental.set_memory_growth(gpus[0], True)
+
+Image.MAX_IMAGE_PIXELS = 933120000
+
+IMAGE_SIZE = 224
 
 # Results in a pixelated image with black squares for places without tumours
 def analyze_image(cnn, large_image_path, validated_image_path):
@@ -19,10 +23,17 @@ def analyze_image(cnn, large_image_path, validated_image_path):
     print(f"Patches shape is: {patches.shape}")
 
     patches_arr = flatten_patches(patches)
+
+    print("Running patches in CNN")
     patches_results = run_patch_batches_in_nn(patches_arr, cnn)
+
+    print("Thresholding patches")
     binarise_patches(patches_arr, patches_results)
 
+    print("Merging patches")
     merged = unpatchify(patches, (tiles_y*IMAGE_SIZE, tiles_x*IMAGE_SIZE, 3))
+
+    print("Saving the image")
     tf.keras.preprocessing.image.save_img(validated_image_path, merged)
     return merged
 
@@ -49,8 +60,9 @@ def run_patch_batches_in_nn(patches_arr, cnn):
 def binarise_patches(patches_arr, patches_results):
     it = 0
     for patch_result in patches_results:
-         if patch_result>0.7: patches_arr[it][...] = 0
-         it+=1
+        if patch_result > 0.1:
+              patches_arr[it][...] = 0
+        it+=1
 
 
 # Results in a smoothed-out binary image of the pixelated one with white for tumors and black for non-tumorous cells

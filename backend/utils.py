@@ -4,7 +4,6 @@ import datetime
 from PIL import Image
 import signal
 
-#ROOT_DIR = os.getenv('ROOTDIR')
 ROOT_DIR = "C:\\Users\\aleks\\Projects\\IDC_Finder\\past_scans"
 
 def make_new_dir_from_path(image_path):
@@ -48,6 +47,12 @@ def remove_file_extension(file_name: str):
     index_of_dot = file_name.index('.')
     return file_name[:index_of_dot]
 
+
+def get_file_extension(file_name: str):
+    index_of_dot = file_name.index('.')
+    extension = file_name[index_of_dot:]
+    return extension
+  
 
 def close_app():
     process_id = os.getpid()
