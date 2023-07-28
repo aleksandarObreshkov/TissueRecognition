@@ -22,9 +22,19 @@
           <img src="../resources/arrow-left.svg" width="30" height="30" alt="" id="backButton" style="margin-left: 10px;">
         </a>
     </nav>
-    <div id="pastScansHolder" class="scans-holder">
-      
-    </div>
+
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">File name</th>
+          <th scope="col">Date</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody id="scansHolder">
+      </tbody>
+
+    </table>
   </body>
   <script src="../scripts/renderer-past-scans.js"></script>
 </html>
