@@ -96,9 +96,9 @@ def read_svs_patches(image_name):
 
 
 def run_patches_in_nn(patches_arr, cnn):
-    print(f"Starting alexnet {datetime.now()}")
+    print(f"Starting scanning of patches {datetime.now()}")
     results_arr = __run_patch_batches_in_nn(patches_arr, cnn)
-    print(f"Stopping alexnet {datetime.now()}")
+    print(f"Stopping scanning of patches {datetime.now()}")
     return results_arr
 
 
@@ -120,10 +120,3 @@ def merge_scan_arr(dims, filenames, scan_results, test_image_name):
     print(f"Deleted patches and svs {datetime.now()}")
 
     return results_numpy
-
-
-# tumor = PIL.Image.open("C:\\Users\\aleks\\Projects\\Tissues\\BreCaHAD\\images\\Case_7-07.tif")
-
-# tumor = tumor.convert('RGB')
-   
-# tumor.show()

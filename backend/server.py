@@ -1,6 +1,6 @@
 from flask import Flask, request, Response
 import main
-import alexnet, vggin_net
+import alexnet
 import server_utils
 import utils
 

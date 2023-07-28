@@ -6,6 +6,13 @@ import signal
 
 ROOT_DIR = "C:\\Users\\aleks\\Projects\\IDC_Finder\\past_scans"
 
+def delete_moved_svs(image_dir):
+    os.remove(image_dir)
+    # for file in os.listdir(scan_dir):
+    #     if '.svs' in file:
+    #         os.remove(f"{scan_dir}\\{file}")
+
+
 def make_new_dir_from_path(image_path):
     image_name = extract_last_element_from_path(image_path)
     image_name = remove_file_extension(image_name)
