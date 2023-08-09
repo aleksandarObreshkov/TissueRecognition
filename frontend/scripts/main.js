@@ -51,6 +51,7 @@ function changeView(event, htmlPage) {
   const webContents = event.sender;
   const win = BrowserWindow.fromWebContents(webContents);
   win.loadFile(htmlPage)
+  console.log("Opening page: "+ htmlPage+" and files are: "+current_scans)
 
   win.webContents.on('did-finish-load', () => {
     if (htmlPage == 'pages/index.html') {
@@ -66,10 +67,8 @@ function openNewWindow(event, htmlPage, args) {
 
 async function readFiles(event, rootDir) {
   let dirs = fs.readdirSync(rootDir)
-  console.log(dirs)
   let scansMap = new Map()
   for (let dir of dirs) {
-    console.log(dir)
     let files = fs.readdirSync(`${rootDir}\\${dir}`)
     scansMap.set(dir, files.length<2)
   }

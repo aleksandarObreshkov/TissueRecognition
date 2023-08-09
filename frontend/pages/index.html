@@ -24,43 +24,36 @@
       <button type="button" class="btn-close" aria-label="Close" id="alert-button"></button>
     </div>
 
-    <div class="menu">
-      <div class="cards-holder">
-        <div class="card">
-          <img class="card-img-top" src="../resources/connectivetissue.jpg" alt="Card image cap">
-          <div class="card-body">
-            <h5 class="card-title">Examine</h5>
-            <p class="card-text">Scan your image for IDC</p>
-            <div class="btn-holder">
-              <div class="files-btn-col">
-                <input class="form-control" style="width: min-content;" type="file" id="formFileMultiple" />
-              </div>
-              <div class="scan-btn-col">
-                <button class="btn btn-primary" id="scanButton" disabled>Scan</button>
-              </div>
-            </div>
-
-            <div id="processingArea" style="margin: 5px;" hidden>
-              <hr>
-              <h6 class="card-title">Currently scanning</h6>
-              <div id="processingList" class="processing-list"></div>
-            </div>
+    <div class="card">
+      <img class="card-img-top" src="../resources/connectivetissue.jpg" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title">Examine</h5>
+        <p class="card-text">Scan your image for IDC</p>
+        <div class="btn-holder">
+          <div class="files-btn-col">
+            <input class="form-control file-input" type="file" id="formFileMultiple" />
+          </div>
+          <div class="scan-btn-col">
+            <button class="btn btn-primary" id="scanButton" disabled style="width: 100%;">Scan</button>
           </div>
         </div>
-      </div>
 
-      <div class="cards-holder">
-        <div class="card" style="height: 22rem;">
-          <img class="card-img-top" src="../resources/background.jpg" alt="Card image cap">
-          <div class="card-body">
-            <h5 class="card-title">View past scans</h5>
-            <p class="card-text">View previously examined images</p>
-            <button class="btn btn-primary" id="viewPastScansButton">View</button>
-          </div>
+        <div id="processingArea" style="margin: 5px;" hidden>
+          <hr>
+          <h6 class="card-title">Currently scanning</h6>
+          <div id="processingList" class="processing-list"></div>
         </div>
       </div>
-
     </div>
+    <div class="card" style="height: 22rem;">
+      <img class="card-img-top" src="../resources/background.jpg" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title">View past scans</h5>
+        <p class="card-text">View previously examined images</p>
+        <button class="btn btn-primary" id="viewPastScansButton">View</button>
+      </div>
+    </div>
+
   </div>
     
   </body>
