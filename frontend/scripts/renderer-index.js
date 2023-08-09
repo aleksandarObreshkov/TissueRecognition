@@ -166,12 +166,18 @@ function createScanSpinner(scanNameAndTimestamp) {
 }
 
 function createOpenScanButton(scanTimestampAndName) {
+  let img = document.createElement('img')
+  img.style.width = '24px'
+  img.style.height = '24px'
+  img.src = '../resources/eye.svg'
+
   let seeScanButton = document.createElement('button');
   seeScanButton.id = `${scanTimestampAndName}-button`
   seeScanButton.classList.add('btn', 'btn-primary')
   seeScanButton.style.width = "fit-content"
   seeScanButton.style.height = "fit-content"
-  seeScanButton.textContent = 'Open'
+
+  seeScanButton.appendChild(img)
   seeScanButton.hidden = true
   seeScanButton.addEventListener('click', () => {
     let currentScanDiv = document.getElementById(scanTimestampAndName)
@@ -187,6 +193,7 @@ function createScanWrapperDiv(scanNameAndTimestamp) {
   let wrapperDiv = document.createElement('div')
   wrapperDiv.setAttribute('id', scanNameAndTimestamp)
   wrapperDiv.style.display = 'flex'
+  wrapperDiv.style.margin = '1px'
 
   return wrapperDiv
 }
