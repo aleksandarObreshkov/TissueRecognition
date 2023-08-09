@@ -20,10 +20,18 @@ html {
     display: flex;
 }
 
-.card, .card-body {
-    flex:auto;
+.card {
+    width: fit-content; 
+    min-height: 20rem;
+    height: fit-content;
+    margin: 5px;
+}
+
+.card-body {
     margin: 5px;
     width: 100%;
+    display: block;
+
 }
 
 .card-img-top {
@@ -46,4 +54,8 @@ html {
 
 .files-btn-col {
     flex-grow: 8;
+}
+
+.eye {
+    display: block;
 }
