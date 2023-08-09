@@ -119,36 +119,10 @@ function checkScanAreaEmpty() {
   } 
 }
 
-function createEye() {
-  let eye = document.createElement('svg')
-  eye.setAttribute('xmlns', "http://www.w3.org/2000/svg")
-  eye.classList.add('bi','bi-eye', 'eye')
-
-
-  eye.setAttribute('fill', 'currentColor')
-  eye.setAttribute('viewBox', "0 0 16 16")
-
-  let path1 = document.createElement('path')
-  path1.setAttribute('d', "M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z")
-
-  let path2 = document.createElement('path')
-  path2.setAttribute('d', "M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z")
-
-
-  eye.appendChild(path1)
-  eye.appendChild(path2)
-
-  return eye
-}
-
 function createScanNameParagraph(scanNameAndTimestamp) {
   let scanName = document.createElement('p')
   scanName.textContent = scanNameAndTimestamp
-  scanName.style.verticalAlign = 'middle'
-  scanName.style.flex = '2'
-  scanName.style.display = 'flex'
-  scanName.style.alignItems = 'center'
-  scanName.style.marginBottom = '0'
+  scanName.classList.add('scan-paragraph')
 
   return scanName
 }
@@ -156,29 +130,22 @@ function createScanNameParagraph(scanNameAndTimestamp) {
 function createScanSpinner(scanNameAndTimestamp) {
   let spinner = document.createElement('div')
   spinner.id = `${scanNameAndTimestamp}-spinner`
-  spinner.classList.add('spinner-border')
-  spinner.classList.add('text-primary')
+  spinner.classList.add('spinner-border', 'text-primary', 'scan-spinner')
   spinner.setAttribute('role', 'status')
-  spinner.style.width='24px'
-  spinner.style.height='24px'
-  spinner.style.display = 'flex'
-  spinner.style.just
 
   return spinner
 }
 
 function createOpenScanButton(scanTimestampAndName) {
-  let img = document.createElement('img')
-  img.style.width = '15px'
-  img.style.height = '15px'
-  img.src = '../resources/eye.svg'
+  let eye = createEyeImg()
 
   let seeScanButton = document.createElement('button');
   seeScanButton.id = `${scanTimestampAndName}-button`
   seeScanButton.classList.add('btn', 'btn-primary', 'eye-button')
 
-  seeScanButton.appendChild(img)
+  seeScanButton.appendChild(eye)
   seeScanButton.hidden = true
+
   seeScanButton.addEventListener('click', () => {
     let currentScanDiv = document.getElementById(scanTimestampAndName)
     processingList.removeChild(currentScanDiv)
@@ -189,11 +156,18 @@ function createOpenScanButton(scanTimestampAndName) {
   return seeScanButton
 }
 
+function createEyeImg() {
+  let img = document.createElement('img')
+  img.classList.add('scan-img')
+  img.src = '../resources/eye.svg'
+
+  return img
+}
+
 function createScanWrapperDiv(scanNameAndTimestamp) {
   let wrapperDiv = document.createElement('div')
+  wrapperDiv.classList.add('scan-wrapper')
   wrapperDiv.setAttribute('id', scanNameAndTimestamp)
-  wrapperDiv.style.display = 'flex'
-  wrapperDiv.style.margin = '5px'
 
   return wrapperDiv
 }
