@@ -44,3 +44,15 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+.btn-secondary {
+    margin-bottom: 10px;
+}
+
+.eye-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+}
