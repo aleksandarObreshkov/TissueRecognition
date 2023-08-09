@@ -161,21 +161,21 @@ function createScanSpinner(scanNameAndTimestamp) {
   spinner.setAttribute('role', 'status')
   spinner.style.width='24px'
   spinner.style.height='24px'
+  spinner.style.display = 'flex'
+  spinner.style.just
 
   return spinner
 }
 
 function createOpenScanButton(scanTimestampAndName) {
   let img = document.createElement('img')
-  img.style.width = '24px'
-  img.style.height = '24px'
+  img.style.width = '15px'
+  img.style.height = '15px'
   img.src = '../resources/eye.svg'
 
   let seeScanButton = document.createElement('button');
   seeScanButton.id = `${scanTimestampAndName}-button`
-  seeScanButton.classList.add('btn', 'btn-primary')
-  seeScanButton.style.width = "fit-content"
-  seeScanButton.style.height = "fit-content"
+  seeScanButton.classList.add('btn', 'btn-primary', 'eye-button')
 
   seeScanButton.appendChild(img)
   seeScanButton.hidden = true
@@ -193,7 +193,7 @@ function createScanWrapperDiv(scanNameAndTimestamp) {
   let wrapperDiv = document.createElement('div')
   wrapperDiv.setAttribute('id', scanNameAndTimestamp)
   wrapperDiv.style.display = 'flex'
-  wrapperDiv.style.margin = '1px'
+  wrapperDiv.style.margin = '5px'
 
   return wrapperDiv
 }
