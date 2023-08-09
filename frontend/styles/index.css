@@ -63,3 +63,27 @@ html {
     width: 24px;
     height: 24px;
 }
+
+.scan-spinner {
+    display: flex;
+    width: 24px;
+    height: 24px;
+}
+
+.scan-paragraph {
+    display: flex;
+    vertical-align: middle;
+    flex: 2;
+    align-items: center;
+    margin-bottom: 0;
+}
+
+.scan-img {
+    width: 15px;
+    height: 15px;
+}
+
+.scan-wrapper {
+    display: flex;
+    margin: 5px;
+}
