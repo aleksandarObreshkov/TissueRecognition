@@ -4,24 +4,29 @@ html {
 }
 
 .main-window{
-    height: 100%;
     width: 100%;
     padding: 2%;
-    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    overflow-x: hidden;
 }
 
-.menu {
+.alert {
     display: flex;
-    flex-direction: column;
-    justify-content: center; /* horizontal alignment*/
-    align-items: center; /* vertical alignment*/
-    height: 80%;
+    width: 45%;
+}
+
+.file-input {
+    width: 100%;
 }
 
 .card {
     display: flex;
-    width: 30rem; 
-    min-height: 20rem;
+    flex: 4;
+    width: 45%; 
+    min-height: 23rem;
     height: fit-content;
     margin: 5px;
 }
@@ -30,7 +35,6 @@ html {
     margin: 5px;
     width: 100%;
     display: block;
-
 }
 
 .card-img-top {
@@ -46,13 +50,14 @@ html {
 
 .scan-btn-col {
     flex-grow: 2;
-    width: min-content;
     height: min-content;
-    margin: 5px;
+    margin-left: 5px;
+    width: 15%;
 }
 
 .files-btn-col {
     flex-grow: 8;
+    width: 75%;
 }
 
 .eye-button {
