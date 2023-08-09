@@ -25,6 +25,8 @@
     "bootstrap-icons": "^1.10.5",
     "electron-squirrel-startup": "^1.0.0",
     "fetch": "^1.1.0",
+    "fontawesome": "^5.6.3",
+    "fontawesome-free": "^1.0.4",
     "query-string": "^8.1.0",
     "querystring": "^0.2.1"
   }
