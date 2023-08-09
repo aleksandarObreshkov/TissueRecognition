@@ -11,17 +11,19 @@ html {
 
 .menu {
     display: flex;
+    flex-direction: column;
     justify-content: center; /* horizontal alignment*/
     align-items: center; /* vertical alignment*/
     height: 100%;
 }
 
-.cards-holder {
-    display: flex;
-}
+/* .cards-holder {
+    //display: flex;
+} */
 
 .card {
-    width: fit-content; 
+    display: flex;
+    width: 30rem; 
     min-height: 20rem;
     height: fit-content;
     margin: 5px;
@@ -35,7 +37,7 @@ html {
 }
 
 .card-img-top {
-    height: 150px;
+    height: 200px;
     width: auto;
 }
 
@@ -86,4 +88,12 @@ html {
 .scan-wrapper {
     display: flex;
     margin: 5px;
+}
+
+.processing-list {
+    overflow-y: hidden; 
+    overflow-wrap: normal; 
+    overflow-x: hidden; 
+    min-height: 0px; 
+    height: fit-content;
 }
