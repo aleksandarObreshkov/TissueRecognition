@@ -22,3 +22,25 @@ body {
 .image-upload>input {
     display: none;
 }
+
+.btn {
+    padding: 1;
+}
+.back-button-holder {
+    display: flex;
+    padding: 0;
+}
+
+.back-button-icon {
+    flex: 1;
+    margin-right: 2px;
+    width: 30px;
+    height: 30px;
+}
+
+.back-button-text {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
