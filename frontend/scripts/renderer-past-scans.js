@@ -37,9 +37,14 @@ function createNewRowForImage(scanTimestamp) {
     const date_col = document.createElement('td')
     const actions_col = document.createElement('td')
 
+    let img = document.createElement('img')
+    img.style.width = '20px'
+    img.style.height = '20px'
+    img.src = '../resources/eye.svg'
+  
     const openButton = document.createElement("button")
-    openButton.classList.add('btn', 'btn-primary')
-    openButton.textContent = "Open scan";
+    openButton.classList.add('btn', 'btn-primary', 'eye-button')
+    openButton.appendChild(img)
     openButton.addEventListener('click', () => showScan(scanTimestamp))
 
     filename_col.textContent = file_name
