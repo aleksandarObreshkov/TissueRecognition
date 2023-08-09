@@ -65,6 +65,18 @@ function openNewWindow(event, htmlPage, args) {
 }
 
 async function readFiles(event, rootDir) {
+  let dirs = fs.readdirSync(rootDir)
+  console.log(dirs)
+  let scansMap = new Map()
+  for (let dir of dirs) {
+    console.log(dir)
+    let files = fs.readdirSync(`${rootDir}\\${dir}`)
+    scansMap.set(dir, files.length<2)
+  }
+  return scansMap
+}
+
+async function readResultImages(event, rootDir) {
   return fs.readdirSync(rootDir)
 }
 
@@ -118,6 +130,7 @@ app.whenReady().then(() => {
   mainWindow = createWindow(HOME_PAGE, null);
   ipcMain.on('change-view', changeView);
   ipcMain.handle('read-files', readFiles)
+  ipcMain.handle('read-result-images', readResultImages)
   ipcMain.on('open-new-window', openNewWindow)
   ipcMain.handle('HTTP:send-request', sendRequestForScan)
 

@@ -9,15 +9,22 @@ window.addEventListener('load', () => {
     getPastScans(ROOT_DIR)
 })
 
+window.electronAPI.updateScan((event, scanNameAndTimestamp) => {
+    console.log(`In scan update in past scans: ${scanNameAndTimestamp}`)
+    let openButton = document.getElementById(`${scanNameAndTimestamp}-button`)
+    openButton.disabled = false
+})
+
 async function getPastScans(rootDir) {
     const receivedScanTimestamps = await window.electronAPI.getImages(rootDir)
     const pastScansHolder = document.getElementById('scansHolder')
-    receivedScanTimestamps.forEach((scans) => {
-        pastScansHolder.appendChild(createNewRowForImage(scans))
-    })
+
+    for (const [key, value] of receivedScanTimestamps) {
+        pastScansHolder.appendChild(createNewRowForImage(key, value))
+    }
 }
 
-function createNewRowForImage(scanTimestamp) {
+function createNewRowForImage(scanTimestamp, isReady) {
     const re = /(\d{8})T(\d{6})-(\w+)/
     const match = scanTimestamp.match(re);
     let date = match[1]
@@ -44,8 +51,10 @@ function createNewRowForImage(scanTimestamp) {
   
     const openButton = document.createElement("button")
     openButton.classList.add('btn', 'btn-primary', 'eye-button')
+    openButton.id = `${scanTimestamp}-button`
     openButton.appendChild(img)
     openButton.addEventListener('click', () => showScan(scanTimestamp))
+    openButton.disabled = isReady
 
     filename_col.textContent = file_name
     date_col.textContent = `${day}.${month}.${year} ${hour}:${minutes}:${secs}`

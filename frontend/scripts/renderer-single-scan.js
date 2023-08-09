@@ -6,7 +6,7 @@ window.addEventListener('load', () => window.electronAPI.getArgs((_event, args) 
 }))
 
 async function createImages(timestamp) {
-    let receivedImages = await window.electronAPI.getImages(ROOT_DIR+"\\"+timestamp[0])
+    let receivedImages = await window.electronAPI.getResultImages(ROOT_DIR+"\\"+timestamp[0])
     let counter = 0
     receivedImages.forEach((scan) => {
         let carouselImageDiv = document.createElement('div')
