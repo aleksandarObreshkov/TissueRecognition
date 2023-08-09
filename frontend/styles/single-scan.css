@@ -2,7 +2,7 @@ body, html {
     height: 100%;
     width: 100%;
     margin: 0;
-    padding: 2%;
+    padding: 0%;
 }
 
 .carousel-item, .carousel-inner, .carousel {
@@ -18,6 +18,7 @@ img {
     object-fit: contain;
 }
 
-.carousel-control-prev, .carousel-control-next {
-    background-color: beige;
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    background-color: black;
+    border-radius: 50%;
 }
