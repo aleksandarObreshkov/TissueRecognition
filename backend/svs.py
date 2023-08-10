@@ -40,7 +40,7 @@ def __split_svs(filepath):
     if utils.get_file_extension(filepath) != '.svs':
         raise RuntimeError("Loaded image is not in SVS format")
 
-    new_filepath = utils.copy_original_to_scan_dir(filepath, FILE_DIR)
+    new_filepath = utils.copy_original_to_scan_dir_for_svs(filepath, FILE_DIR)
     filename = utils.extract_last_element_from_path(new_filepath)
     turtle = py_wsi.Turtle(FILE_DIR, DB_LOCATION, DB_NAME, label_map={}, storage_type='disk')
 
@@ -120,3 +120,16 @@ def merge_scan_arr(dims, filenames, scan_results, test_image_name):
     print(f"Deleted patches and svs {datetime.now()}")
 
     return results_numpy
+
+
+def cleanup(filename):
+    for file in  os.listdir(FILE_DIR):
+        if filename in file:
+            os.remove(f'{FILE_DIR}{file}')
+    
+    print(f"Deleted original. Proof: {os.listdir(FILE_DIR)}")
+    
+    for patch in os.listdir(DB_LOCATION):
+        if filename in patch:
+            os.remove(f'{DB_LOCATION}{patch}')
+    print("Deleted patches")

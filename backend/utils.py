@@ -6,11 +6,8 @@ import signal
 
 ROOT_DIR = "C:\\Users\\aleks\\Projects\\IDC_Finder\\past_scans"
 
-def delete_moved_svs(image_dir):
+def delete(image_dir):
     os.remove(image_dir)
-    # for file in os.listdir(scan_dir):
-    #     if '.svs' in file:
-    #         os.remove(f"{scan_dir}\\{file}")
 
 
 def make_new_dir_from_path(image_path):
@@ -20,7 +17,7 @@ def make_new_dir_from_path(image_path):
     return (copy_original_to_scan_dir(image_path, curr_scan_dir), curr_scan_dir)
 
 
-def copy_original_to_scan_dir(image_path, scan_dir):
+def copy_original_to_scan_dir_for_svs(image_path, scan_dir):
     copy_original_in_scan_dir(image_path, scan_dir)
     original_image_path = f"{scan_dir}\\{extract_last_element_from_path(image_path)}"
     return original_image_path
@@ -64,3 +61,14 @@ def get_file_extension(file_name: str):
 def close_app():
     process_id = os.getpid()
     os.kill(process_id, signal.SIGTERM) #find a better way to do this
+
+
+def copy_original_to_scan_dir(image_path, scan_dir):
+    image_timespamp = extract_last_element_from_path(scan_dir)
+    original_image_path = f"{scan_dir}\\{image_timespamp}.svs"
+    copy_original_in_scan_dir(image_path, original_image_path)
+    return original_image_path
+
+
+def delete_force(dir):
+    shutil.rmtree(dir)
