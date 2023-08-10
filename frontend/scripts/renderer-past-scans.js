@@ -11,8 +11,10 @@ window.addEventListener('load', () => {
 
 window.electronAPI.updateScan((event, scanNameAndTimestamp) => {
     console.log(`In scan update in past scans: ${scanNameAndTimestamp}`)
-    let openButton = document.getElementById(`${scanNameAndTimestamp}-button`)
-    openButton.disabled = false
+    let eyeButton = document.getElementById(`${scanNameAndTimestamp}-eye-button`)
+    let folderButton = document.getElementById(`${scanNameAndTimestamp}-folder-button`)
+    eyeButton.disabled = false
+    folderButton.disabled = false
 })
 
 async function getPastScans(rootDir) {
@@ -40,34 +42,57 @@ function createNewRowForImage(scanTimestamp, isReady) {
     let secs = time.slice(4, 6)
 
     const row = document.createElement('tr')
-    const filename_col = document.createElement('td')
-    const date_col = document.createElement('td')
-    const actions_col = document.createElement('td')
+    const filenameColumn = document.createElement('td')
+    const dateColumn = document.createElement('td')
+    const actionsColumn = document.createElement('td')
 
-    let img = document.createElement('img')
-    img.style.width = '20px'
-    img.style.height = '20px'
-    img.src = '../resources/eye.svg'
-  
+    let eye = document.createElement('img')
+    eye.style.width = '20px'
+    eye.style.height = '20px'
+    eye.src = '../resources/eye.svg'
+
     const openButton = document.createElement("button")
     openButton.classList.add('btn', 'btn-primary', 'eye-button')
-    openButton.id = `${scanTimestamp}-button`
-    openButton.appendChild(img)
+    openButton.id = `${scanTimestamp}-eye-button`
+    openButton.appendChild(eye)
     openButton.addEventListener('click', () => showScan(scanTimestamp))
     openButton.disabled = isReady
 
-    filename_col.textContent = file_name
-    date_col.textContent = `${day}.${month}.${year} ${hour}:${minutes}:${secs}`
-    console.log(date_col.textContent)
-    actions_col.appendChild(openButton);
+    let folder = document.createElement('img')
+    folder.style.width = '20px'
+    folder.style.height = '20px'
+    folder.src = '../resources/folder.svg'
 
-    row.appendChild(filename_col)
-    row.appendChild(date_col)
-    row.appendChild(actions_col)
+    const folderButton = document.createElement("button")
+    folderButton.classList.add('btn', 'btn-secondary', 'eye-button')
+    folderButton.id = `${scanTimestamp}-folder-button`
+    folderButton.appendChild(folder)
+    folderButton.addEventListener('click', () => openFolder(scanTimestamp))
+    folderButton.disabled = isReady
+
+    let buttonHolder = document.createElement('div')
+    buttonHolder.classList.add('actions-button-holder')
+    buttonHolder.appendChild(openButton)
+    buttonHolder.appendChild(folderButton)
+
+    filenameColumn.textContent = file_name
+    dateColumn.textContent = `${day}.${month}.${year} ${hour}:${minutes}:${secs}`
+
+    actionsColumn.appendChild(buttonHolder);
+
+
+
+    row.appendChild(filenameColumn)
+    row.appendChild(dateColumn)
+    row.appendChild(actionsColumn)
     return row
 }
 
 function showScan(timestamp) {
     window.electronAPI.openNewWindow('pages/single-scan.html', [timestamp]);
+}
+
+function openFolder(timestamp) {
+    window.electronAPI.openFolder(timestamp)
 }
 

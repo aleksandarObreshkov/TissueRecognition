@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, shell } = require('electron')
 const path = require('path')
 const fs = require('fs')
 const HOME_PAGE = 'pages/index.html'
@@ -6,6 +6,7 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 const { exec } = require('node:child_process')
 const express = require('express');
 const BACKEND_URL = "http://127.0.0.1:5000"
+const ROOT_DIR = "C:\\Users\\aleks\\Projects\\IDC_Finder\\past_scans"
 
 let currentScans = []
 
@@ -56,6 +57,10 @@ function changeView(event, htmlPage) {
 function openNewWindow(event, htmlPage, args) {
   let newWindow = createWindow(htmlPage, args)
   newWindow.show()
+}
+
+function openFolder(event, folderName) {
+  shell.showItemInFolder(`${ROOT_DIR}\\${folderName}`)
 }
 
 async function readFiles(event, rootDir) {
@@ -130,6 +135,7 @@ app.whenReady().then(() => {
   ipcMain.on('open-new-window', openNewWindow)
   ipcMain.handle('HTTP:send-request', sendRequestForScan)
   ipcMain.handle('currently-scanning', getCurrentlyScanning)
+  ipcMain.on('open-folder', openFolder)
 
   electronRestApi.listen(5001, () => {
     console.log("Express is running on port 5001")

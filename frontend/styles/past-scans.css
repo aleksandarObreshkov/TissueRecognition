@@ -55,4 +55,10 @@ body {
     align-items: center;
     width: 35px;
     height: 35px;
+    margin: 2px;
+}
+
+.actions-button-holder {
+    display: flex;
+    flex-direction: row;
 }
