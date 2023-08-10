@@ -7,24 +7,24 @@ const { exec } = require('node:child_process')
 const express = require('express');
 const BACKEND_URL = "http://127.0.0.1:5000"
 
-let current_scans = []
+let currentScans = []
 
 let  mainWindow;
-let electron_rest_api = express()
-electron_rest_api.use(express.json())
+let electronRestApi = express()
+electronRestApi.use(express.json())
 
 function removeScanFromCurrentScans(scan) {
-  let index = current_scans.indexOf(scan)
+  let index = currentScans.indexOf(scan)
   if (index == -1) {
     console.error("Error: Inconsistency. Trying to remove a scan which does not exist in frontend.")
     return null;
   }
-  current_scans.splice(index, 1);
+  currentScans.splice(index, 1);
 }
 
 function createWindow (htmlPage, args) {
   let window = new BrowserWindow({
-    height:650,
+    height:800,
     width:1200,
     useContentSize: true,
     webPreferences: {
@@ -51,13 +51,6 @@ function changeView(event, htmlPage) {
   const webContents = event.sender;
   const win = BrowserWindow.fromWebContents(webContents);
   win.loadFile(htmlPage)
-  console.log("Opening page: "+ htmlPage+" and files are: "+current_scans)
-
-  win.webContents.on('did-finish-load', () => {
-    if (htmlPage == 'pages/index.html') {
-      mainWindow.webContents.send('currently-scanning', current_scans)
-    }
-  });
 }
 
 function openNewWindow(event, htmlPage, args) {
@@ -96,7 +89,7 @@ async function sendRequestForScan(event, body) {
     }
   
     let scanDir = await responseData.text()
-    current_scans.push(scanDir)
+    currentScans.push(scanDir)
     return scanDir
   } catch(err) {
     console.error(`Error while sending scan request. Message: ${err}`)
@@ -123,6 +116,10 @@ async function sendCloseSignalToServer() {
   
 }
 
+async function getCurrentlyScanning() {
+  return currentScans
+}
+
 app.whenReady().then(() => {
   //exec(`start ${app.getAppPath()}\\dist\\server\\server.exe`); 
 
@@ -132,25 +129,26 @@ app.whenReady().then(() => {
   ipcMain.handle('read-result-images', readResultImages)
   ipcMain.on('open-new-window', openNewWindow)
   ipcMain.handle('HTTP:send-request', sendRequestForScan)
+  ipcMain.handle('currently-scanning', getCurrentlyScanning)
 
-  electron_rest_api.listen(5001, () => {
+  electronRestApi.listen(5001, () => {
     console.log("Express is running on port 5001")
   })
 
-  electron_rest_api.post('/update', function(req, res) {
+  electronRestApi.post('/update', function(req, res) {
     let completedScanName = req.body.completedScan
     mainWindow.webContents.send('scan-update:SUCCESS', completedScanName)
     removeScanFromCurrentScans(completedScanName)
     res.sendStatus(200)
   })
 
-  electron_rest_api.post('/ready', function(req, res) {
+  electronRestApi.post('/ready', function(req, res) {
     console.log("Backend ready")
     mainWindow.show()
     res.sendStatus(200)
   })
 
-  electron_rest_api.post('/failed', function(req, res) {
+  electronRestApi.post('/failed', function(req, res) {
     let failedScanName = req.body.failedScan
     let exception = req.body.errorMessage
 
