@@ -11,5 +11,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   updateScan: (scanName) => ipcRenderer.on('scan-update:SUCCESS', scanName),
   errorScan:(scanName, errorMessage) => ipcRenderer.on('scan-update:ERROR', scanName, errorMessage),
   showErrorBanner: (error) => ipcRenderer.on('show-error-banner', error),
-  getCurrentlyScanning: () => ipcRenderer.invoke('currently-scanning')
+  getCurrentlyScanning: () => ipcRenderer.invoke('currently-scanning'),
+  openFolder: (timestamp) => ipcRenderer.send('open-folder', timestamp)
 })
