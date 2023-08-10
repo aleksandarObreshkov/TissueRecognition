@@ -9,6 +9,19 @@ const processingArea = document.getElementById('processingArea')
 
 let filesToScan = []
 
+window.addEventListener('load', () => {
+  getCurrentScans()
+})
+
+async function getCurrentScans() {
+  let scans = await window.electronAPI.getCurrentlyScanning()
+  console.log(scans)
+
+  for (let scan of scans) {
+    addNewScanToProcessingList(scan)
+  }
+}
+
 alert_button.addEventListener('click', () => {
   alert_banner.hidden = true
 })
@@ -39,11 +52,11 @@ viewPastScansButton.addEventListener('click', () => {
   window.electronAPI.changeView("pages/past-scans.html")
 })
 
-window.electronAPI.receiveCurrentlyScanning((event, currentlyScanning) => {
-  for (let scan of currentlyScanning) {
-    addNewScanToProcessingList(scan)
-  }
-})
+// window.electronAPI.receiveCurrentlyScanning((event, currentlyScanning) => {
+//   for (let scan of currentlyScanning) {
+//     addNewScanToProcessingList(scan)
+//   }
+// })
 
 window.electronAPI.updateScan((event, scanNameAndTimestamp) => {
   console.log(`In scan update: ${scanNameAndTimestamp}`)
