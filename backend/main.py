@@ -33,11 +33,11 @@ def scan(original_image_path, curr_scan_dir, model):
 
         image_shape = (math.ceil(dims[1]/50)*50, math.ceil(dims[0]/50)*50, 3)
         original_merged, result_tint = merger.merge(name_to_image_map, 50, image_shape, image_name, results_arr)
-        svs.cleanup(utils.remove_file_extension(utils.extract_last_element_from_path(original_image_path)))
-        #Image.fromarray(result_probability_map).save(probability_map_path)
-
         Image.fromarray(original_merged).save(validated_image_path)
         Image.fromarray(result_tint).save(result_path)
+
+        svs.cleanup(utils.remove_file_extension(utils.extract_last_element_from_path(original_image_path)))
+        #Image.fromarray(result_probability_map).save(probability_map_path)
 
         utils.delete(original_image_path)
     

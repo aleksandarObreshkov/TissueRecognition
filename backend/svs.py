@@ -38,7 +38,7 @@ def __get_level_to_scan(dims_arr):
 
 def __split_svs(filepath):
     if utils.get_file_extension(filepath) != '.svs':
-        raise RuntimeError("Loaded image is not in SVS format")
+        raise RuntimeError("Loaded image is not in SVS format.")
 
     new_filepath = utils.copy_original_to_scan_dir_for_svs(filepath, FILE_DIR)
     filename = utils.extract_last_element_from_path(new_filepath)
@@ -95,9 +95,9 @@ def read_svs_patches(image_name):
     return patches_arr, filenames
 
 
-def run_patches_in_nn(patches_arr, cnn):
+def run_patches_in_nn(patches_arr, nn):
     print(f"Starting scanning of patches {datetime.now()}")
-    results_arr = __run_patch_batches_in_nn(patches_arr, cnn)
+    results_arr = __run_patch_batches_in_nn(patches_arr, nn)
     print(f"Stopping scanning of patches {datetime.now()}")
     return results_arr
 

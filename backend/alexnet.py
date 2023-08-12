@@ -6,13 +6,6 @@ from os import listdir
 model_name = "tissue_recogniser_idc"
 
 
-class accuracy_callback(keras.callbacks.Callback):
-    def on_epoch_end(self,epoch,logs={}):
-        if (logs.get("accuracy")>0.97):
-            print("\nReached desired accuracy so stopping training")
-            self.model.stop_training =True
-
-
 def get_alexnet_network_model():
     return keras.models.Sequential([
         keras.layers.Resizing(50, 50),
@@ -66,14 +59,14 @@ def load_model():
 def train_model():
     run_logdir = metrics.get_run_logdir()
     tensorboard_cb = keras.callbacks.TensorBoard(run_logdir)
-    callback = accuracy_callback()
+    callback = metrics.accuracy_callback()
 
     alexnet_model = create_model()
     alexnet_model.fit(datasets.get_training_dataset(),
                 epochs=100,
                 validation_data=datasets.get_validation_dataset(),
                 validation_freq=1,
-                callbacks=[callback])
+                callbacks=[callback, tensorboard_cb])
     alexnet_model.evaluate(datasets.get_test_dataset())
     alexnet_model.save(model_name)
     return alexnet_model

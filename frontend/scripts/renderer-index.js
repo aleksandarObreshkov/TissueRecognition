@@ -118,7 +118,7 @@ function resetInput() {
 }
 
 function displayAlertWithMessage(message) {
-  alert_message_holder.textContent = message
+  alert_message_holder.textContent = `${message}`
   alert_banner.hidden = false
 }
 

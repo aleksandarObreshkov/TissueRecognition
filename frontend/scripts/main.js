@@ -41,7 +41,9 @@ function createWindow (htmlPage, args) {
         window.setTitle(args[0])
       }
     })
-    return window
+
+  window.removeMenu()
+  return window
 }
 
 function closeAllWindows() {
@@ -60,7 +62,7 @@ function openNewWindow(event, htmlPage, args) {
 }
 
 function openFolder(event, folderName) {
-  shell.showItemInFolder(`${ROOT_DIR}\\${folderName}`)
+  shell.openPath(`${ROOT_DIR}\\${folderName}`)
 }
 
 async function readFiles(event, rootDir) {
@@ -90,7 +92,8 @@ async function sendRequestForScan(event, body) {
     let status = responseData.status
     const expectedStatus = 201
     if(status != expectedStatus) {
-      throw new Error(`Status was ${status}. Expected ${expectedStatus}`)
+      console.error(`Status was ${status}. Expected ${expectedStatus}`)
+      throw new Error(responseData.body)
     }
   
     let scanDir = await responseData.text()
@@ -98,6 +101,10 @@ async function sendRequestForScan(event, body) {
     return scanDir
   } catch(err) {
     console.error(`Error while sending scan request. Message: ${err}`)
+    if(err.message.includes('SVS')){
+      mainWindow.webContents.send('show-error-banner', err.message)
+      return null
+    }
     mainWindow.webContents.send('show-error-banner', "Error while sending scan request.")
     return null
   }

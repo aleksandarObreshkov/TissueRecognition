@@ -15,7 +15,7 @@ html {
 
 .alert {
     display: flex;
-    width: 45%;
+    width: fit-content;
 }
 
 .file-input {
@@ -98,4 +98,8 @@ html {
     overflow-x: hidden; 
     min-height: 0px; 
     height: fit-content;
+}
+
+strong {
+    margin-right: 1px;
 }
