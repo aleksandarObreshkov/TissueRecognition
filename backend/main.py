@@ -8,6 +8,7 @@ from PIL import Image
 
 def exception_hook(args:threading.ExceptHookArgs):
     server_utils.inform_scan_failed(args.exc_value.args)
+    # TODO: Add deletion of scan directory somehow?
 
 threading.excepthook = exception_hook
 
@@ -21,12 +22,10 @@ def scan(original_image_path, curr_scan_dir, model):
     try:
         validated_image_path = f"{curr_scan_dir}\\merged.png"
         result_path = f'{curr_scan_dir}\\result.png'
-        #probability_map_path = f'{curr_scan_dir}\\map.png'
 
         dims, image_name = svs.split_svs(original_image_path)
         patches, all_filenames = svs.read_svs_patches(image_name)
         results_arr = svs.run_patches_in_nn(patches, model)
-        #result_probability_map = svs.merge_scan_arr(dims, all_filenames,results_arr,image_name)
 
         name_to_image_map = zip(all_filenames, patches)
         print(f"Dimensions are {dims}")
@@ -37,8 +36,6 @@ def scan(original_image_path, curr_scan_dir, model):
         Image.fromarray(result_tint).save(result_path)
 
         svs.cleanup(utils.remove_file_extension(utils.extract_last_element_from_path(original_image_path)))
-        #Image.fromarray(result_probability_map).save(probability_map_path)
-
         utils.delete(original_image_path)
     
         server_utils.inform_scan_ready(utils.extract_last_element_from_path(curr_scan_dir))

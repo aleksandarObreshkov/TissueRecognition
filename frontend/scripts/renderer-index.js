@@ -13,15 +13,6 @@ window.addEventListener('load', () => {
   getCurrentScans()
 })
 
-async function getCurrentScans() {
-  let scans = await window.electronAPI.getCurrentlyScanning()
-  console.log(scans)
-
-  for (let scan of scans) {
-    addNewScanToProcessingList(scan)
-  }
-}
-
 alert_button.addEventListener('click', () => {
   alert_banner.hidden = true
 })
@@ -38,7 +29,7 @@ fileUpload.addEventListener('change', () => {
 })
 
 scanButton.addEventListener('click', () => {
-  makeHttpCall(filesToScan)
+  sendFileForScan(filesToScan)
   .then((response) => {
     if (response!=null) {
       console.log(`Response from HTTP was ${response}`)
@@ -77,14 +68,22 @@ window.electronAPI.showErrorBanner((event, err) => {
   displayAlertWithMessage(err)
 })
 
-async function makeHttpCall(files) {
-  let currDir = await window.electronAPI.sendRequestForScan(files)
+async function getCurrentScans() {
+  let scans = await window.electronAPI.getCurrentlyScanning()
+
+  for (let scan of scans) {
+    addNewScanToProcessingList(scan)
+  }
+}
+
+async function sendFileForScan(file) {
+  let currDir = await window.electronAPI.sendRequestForScan(file)
   filesToScan = []
   return currDir
 }
 
-function showScan(timestamp) {
-  window.electronAPI.openNewWindow('pages/single-scan.html', [timestamp]);
+function showScan(scanName) {
+  window.electronAPI.openNewWindow('pages/single-scan.html', [scanName]);
 }
 
 function addNewScanToProcessingList(scanTimestampAndName) {
