@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 
-samples_dir = "C:\\Users\\aleks\\Projects\\Tissues\\IDC Breast Cancer Sorted"
+samples_dir = "C:\\Users\\aleks\\Projects\\Tissues\\IDC Breast Cancer Sorted Modified"
 
 
 def get_training_dataset():

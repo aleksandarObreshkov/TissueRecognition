@@ -88,11 +88,11 @@ function createNewRowForImage(scanTimestamp, isReady) {
     return row
 }
 
-function showScan(timestamp) {
-    window.electronAPI.openNewWindow('pages/single-scan.html', [timestamp]);
+function showScan(scanName) {
+    window.electronAPI.openNewWindow('pages/single-scan.html', [scanName]);
 }
 
-function openFolder(timestamp) {
-    window.electronAPI.openFolder(timestamp)
+function openFolder(scanName) {
+    window.electronAPI.openFolder(scanName)
 }
 

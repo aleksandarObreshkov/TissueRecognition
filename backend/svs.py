@@ -109,9 +109,9 @@ def merge_scan_arr(dims, filenames, scan_results, test_image_name):
         match = re.search(f"{test_image_name}_(\d+)_(\d+)_", file)
         row = int(match.group(1))*PATCH_SIZE
         col = int(match.group(2))*PATCH_SIZE
-        if result >= 0.9:
+        if result >= 0.999:
             __apply_color(results_numpy[col:col+PATCH_SIZE,row:row+PATCH_SIZE], 'high')
-        if result > 0.3 and result < 0.9:
+        if result > 0.3 and result < 0.999:
             __apply_color(results_numpy[col:col+PATCH_SIZE,row:row+PATCH_SIZE], 'low')
     print(f"Formed result image {datetime.now()}")
 
