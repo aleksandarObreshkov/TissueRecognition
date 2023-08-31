@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(
-    ['server.py', 'main.py', 'utils.py', 'metrics.py', 'image_processing.py', 'datasets.py', 'alexnet.py'],
+    ['server.py', 'main.py', 'utils.py', 'metrics.py', 'merger.py', 'datasets.py', 'neural_network.py', 'rgb_transform.py', 'server_utils.py', 'svs.py'],
     pathex=[],
     binaries=[],
     datas=[],
@@ -20,6 +20,8 @@ a = Analysis(
     noarchive=False,
 )
 a.datas+=Tree('./tissue_recogniser_idc', prefix='tissue_recogniser_idc')
+a.datas+=Tree('./py_wsi', prefix='py_wsi')
+a.datas+=Tree('./openslide', prefix='openslide')
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(

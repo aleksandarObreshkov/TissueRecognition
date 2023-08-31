@@ -1,6 +1,6 @@
-OPENSLIDE_PATH = "C:\\Program Files\\OpenSlide\\openslide-win64-20230414\\bin"
 import os
 import re
+OPENSLIDE_PATH = f'{os.curdir}\\openslide\\openslide-win64-20230414\\bin'
 os.add_dll_directory(OPENSLIDE_PATH)
 
 import py_wsi
@@ -10,8 +10,8 @@ import utils
 from datetime import datetime
 
 
-FILE_DIR = "C:\\Users\\aleks\\Projects\\Tissues\\Py-WSI\\original\\"
-DB_LOCATION = "C:\\Users\\aleks\\Projects\\Tissues\\Py-WSI\\db\\"
+FILE_DIR = f'{os.curdir}\\py_wsi\\original'
+DB_LOCATION = f'{os.curdir}\\py_wsi\\db'
 DB_NAME = "db"
 PATCH_SIZE = 50
 
@@ -109,9 +109,9 @@ def merge_scan_arr(dims, filenames, scan_results, test_image_name):
         match = re.search(f"{test_image_name}_(\d+)_(\d+)_", file)
         row = int(match.group(1))*PATCH_SIZE
         col = int(match.group(2))*PATCH_SIZE
-        if result >= 0.999:
+        if result >= 0.80:
             __apply_color(results_numpy[col:col+PATCH_SIZE,row:row+PATCH_SIZE], 'high')
-        if result > 0.3 and result < 0.999:
+        if result > 0.3 and result < 0.80:
             __apply_color(results_numpy[col:col+PATCH_SIZE,row:row+PATCH_SIZE], 'low')
     print(f"Formed result image {datetime.now()}")
 

@@ -110,15 +110,15 @@ def train_model():
 
 def get_model(cnn_model_name):
     m: keras.models.Model
-    # print('Loading from memory')
-    # return keras.models.load_model(f'C:\\Users\\aleks\\Projects\\IDC_Finder\\backend\\{cnn_model_name}')
+    print('Loading from memory')
+    return keras.models.load_model(f'C:\\Users\\aleks\\Projects\\IDC_Finder\\backend\\{cnn_model_name}')
 
-    if cnn_model_name not in listdir("C:\\Users\\aleks\\Projects\\IDC_Finder\\frontend\\dist\\server"):
-        print("Creating Neural Network model")
-        m = train_model()
-    else:
-        print("Loading Neural Network from memory")
-        m = keras.models.load_model(f'C:\\Users\\aleks\\Projects\\IDC_Finder\\frontend\\dist\\server\\{cnn_model_name}')
-    return m
+    # if cnn_model_name not in listdir("C:\\Users\\aleks\\Projects\\IDC_Finder\\frontend\\dist\\server"):
+    #     print("Creating Neural Network model")
+    #     m = train_model()
+    # else:
+    #     print("Loading Neural Network from memory")
+    #     m = keras.models.load_model(f'C:\\Users\\aleks\\Projects\\IDC_Finder\\frontend\\dist\\server\\{cnn_model_name}')
+    # return m
 
-get_model(model_name)
+# get_model(model_name)

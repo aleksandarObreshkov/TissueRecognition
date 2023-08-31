@@ -14,3 +14,4 @@ dist/
 build/
 electron-win32-x64/
 idc*/
+openslide/

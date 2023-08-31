@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image
 import os, re
 from rbg_transform import RGBTransform
-TEMP_DIR = "C:\\Users\\aleks\\Desktop\\9346"
+TEMP_DIR = "C:\\Users\\aleks\\Desktop\\9022"
 PATTERN = '\d+_idx5_x(\d+)_y(\d+)_class(\d)'
 
 
@@ -28,11 +28,11 @@ def make_result_image(patches_arr):
         y = int(match[2])
         result[y:y+50, x:x+50] = np.array(patch)
     
-    Image.fromarray(result).save("C:\\Users\\aleks\\Desktop\\result1.png")
+    Image.fromarray(result).save("C:\\Users\\aleks\\Desktop\\result.png")
 
 
 
-cnn = neural_network.get_model('idc_smaller')
+cnn = neural_network.get_model('tissue_recogniser_idc')
 images_arr = []
 
 for image in os.listdir(TEMP_DIR):
@@ -46,7 +46,7 @@ for index in range(0, len(images_arr), batch_size):
         patches_results.extend(results)
 colored_arr = []
 for patch, result in zip(images_arr, patches_results, strict=True):
-    if(result > 0.80):
+    if(result > 0.99):
         patch = RGBTransform().mix_with((240, 148, 62),factor=.30).applied_to(Image.fromarray(patch))
     colored_arr.append(patch)
 make_result_image(colored_arr)
