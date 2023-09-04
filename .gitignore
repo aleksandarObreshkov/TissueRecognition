@@ -15,3 +15,4 @@ build/
 electron-win32-x64/
 idc*/
 openslide/
+py_wsi/

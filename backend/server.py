@@ -5,7 +5,7 @@ import server_utils
 import utils
 
 server = Flask(__name__)
-cnn = neural_network.get_model('idc_')
+cnn = neural_network.get_model(neural_network.model_name)
 
 
 @server.route('/scan', methods=['POST'])

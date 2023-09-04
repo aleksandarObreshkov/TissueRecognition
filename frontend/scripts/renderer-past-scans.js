@@ -1,12 +1,11 @@
 const backButton = document.getElementById('backButton')
-const ROOT_DIR = "C:\\Users\\aleks\\Projects\\IDC_Finder\\past_scans"
 
 backButton.addEventListener('click', () => {
     window.electronAPI.changeView('pages/index.html', null);
 })
 
 window.addEventListener('load', () => {
-    getPastScans(ROOT_DIR)
+    getPastScans()
 })
 
 window.electronAPI.updateScan((event, scanNameAndTimestamp) => {
@@ -17,8 +16,8 @@ window.electronAPI.updateScan((event, scanNameAndTimestamp) => {
     folderButton.disabled = false
 })
 
-async function getPastScans(rootDir) {
-    const receivedScanTimestamps = await window.electronAPI.getImages(rootDir)
+async function getPastScans() {
+    const receivedScanTimestamps = await window.electronAPI.getImages()
     const pastScansHolder = document.getElementById('scansHolder')
 
     for (const [key, value] of receivedScanTimestamps) {

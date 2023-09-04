@@ -4,7 +4,7 @@ import datetime
 from PIL import Image
 import signal
 
-ROOT_DIR = "C:\\Users\\aleks\\Projects\\IDC_Finder\\past_scans"
+ROOT_DIR = os.path.abspath(f"{os.curdir}\\past_scans")
 
 
 def make_new_dir_from_path(image_path):

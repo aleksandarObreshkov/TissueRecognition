@@ -3,8 +3,8 @@ const { contextBridge, ipcRenderer } = require('electron')
 
 contextBridge.exposeInMainWorld('electronAPI', {
   changeView: (htmlPage) => ipcRenderer.send('change-view', htmlPage),
-  getImages: (rootDir) => ipcRenderer.invoke('read-files', rootDir),
-  getResultImages: (rootDir) => ipcRenderer.invoke('read-result-images', rootDir),
+  getImages: () => ipcRenderer.invoke('read-files'),
+  getResultImages: (scanDir) => ipcRenderer.invoke('read-result-images', scanDir),
   openNewWindow: (htmlPage, args) => ipcRenderer.send('open-new-window', htmlPage, args), 
   getArgs: (args) => ipcRenderer.on("image-window-args", args),
   sendRequestForScan: (body) => ipcRenderer.invoke('HTTP:send-request', body),

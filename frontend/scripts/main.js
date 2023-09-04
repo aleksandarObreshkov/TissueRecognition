@@ -6,7 +6,8 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 const { exec } = require('node:child_process')
 const express = require('express');
 const BACKEND_URL = "http://127.0.0.1:5000"
-const ROOT_DIR = "C:\\Users\\aleks\\Projects\\IDC_Finder\\past_scans"
+//const ROOT_DIR = `${app.getAppPath()}\\dist\\server\\past_scans`
+const ROOT_DIR = "C:\\Users\\aleks\\Projects\\IDC_Finder\\backend\\past_scans"
 
 let currentScans = []
 
@@ -42,7 +43,7 @@ function createWindow (htmlPage, args) {
       }
     })
 
-  window.removeMenu()
+  //window.removeMenu()
   return window
 }
 
@@ -65,18 +66,18 @@ function openFolder(event, folderName) {
   shell.openPath(`${ROOT_DIR}\\${folderName}`)
 }
 
-async function readFiles(event, rootDir) {
-  let dirs = fs.readdirSync(rootDir)
+async function readFiles(event) {
+  let dirs = fs.readdirSync(ROOT_DIR)
   let scansMap = new Map()
   for (let dir of dirs) {
-    let files = fs.readdirSync(`${rootDir}\\${dir}`)
+    let files = fs.readdirSync(`${ROOT_DIR}\\${dir}`)
     scansMap.set(dir, files.length<2)
   }
   return scansMap
 }
 
-async function readResultImages(event, rootDir) {
-  return fs.readdirSync(rootDir)
+async function readResultImages(event, scanDir) {
+  return [ROOT_DIR, fs.readdirSync(`${ROOT_DIR}\\${scanDir}`)]
 }
 
 async function sendRequestForScan(event, body) {

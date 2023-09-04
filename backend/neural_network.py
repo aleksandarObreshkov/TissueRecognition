@@ -3,8 +3,8 @@ import datasets
 import metrics
 from os import listdir, environ
 
-#model_name = "tissue_recogniser_idc"
-model_name = "idc_"
+model_name = "tissue_recogniser_idc"
+#model_name = "idc_"
 environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
 
 
