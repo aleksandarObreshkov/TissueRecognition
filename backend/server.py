@@ -1,10 +1,11 @@
-from flask import Flask, request, Response
+from flask import Flask, request, Response, cli
 import main
 import neural_network
 import server_utils
 import utils
 
 server = Flask(__name__)
+cli.show_server_banner = lambda *args: None
 cnn = neural_network.get_model(neural_network.model_name)
 
 

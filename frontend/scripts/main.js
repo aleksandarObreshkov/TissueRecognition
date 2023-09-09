@@ -31,7 +31,7 @@ function createWindow (htmlPage, args) {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
-    show: true
+    show: false
   })
   
   window.loadFile(htmlPage)
@@ -42,7 +42,7 @@ function createWindow (htmlPage, args) {
       }
     })
 
-  //window.removeMenu()
+  window.removeMenu()
   return window
 }
 
