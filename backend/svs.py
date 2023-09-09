@@ -1,6 +1,6 @@
 import os
 import re
-OPENSLIDE_PATH = os.path.abspath(f'{os.curdir}\\openslide\\openslide-win64-20230414\\bin')
+OPENSLIDE_PATH = os.path.abspath(f'{os.curdir}\\resources\\app\\dist\\server\\openslide\\openslide-win64-20230414\\bin')
 os.add_dll_directory(OPENSLIDE_PATH)
 
 import py_wsi
@@ -9,9 +9,9 @@ import numpy as np
 import utils
 from datetime import datetime
 
-__FILE_DIR_NO_SLASH = os.path.abspath(f'{os.curdir}\\py_wsi\\original')
+__FILE_DIR_NO_SLASH = os.path.abspath(f'{os.curdir}\\resources\\app\\dist\\server\\py_wsi\\original')
 FILE_DIR = f"{__FILE_DIR_NO_SLASH}\\"
-__DB_LOCATION_NO_SLASH = os.path.abspath(f'{os.curdir}\\py_wsi\\db')
+__DB_LOCATION_NO_SLASH = os.path.abspath(f'{os.curdir}\\resources\\app\\dist\\server\\py_wsi\\db')
 DB_LOCATION =f"{__DB_LOCATION_NO_SLASH}\\"
 DB_NAME = "db"
 PATCH_SIZE = 50

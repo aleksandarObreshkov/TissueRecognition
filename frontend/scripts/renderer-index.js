@@ -43,11 +43,6 @@ viewPastScansButton.addEventListener('click', () => {
   window.electronAPI.changeView("pages/past-scans.html")
 })
 
-// window.electronAPI.receiveCurrentlyScanning((event, currentlyScanning) => {
-//   for (let scan of currentlyScanning) {
-//     addNewScanToProcessingList(scan)
-//   }
-// })
 
 window.electronAPI.updateScan((event, scanNameAndTimestamp) => {
   console.log(`In scan update: ${scanNameAndTimestamp}`)

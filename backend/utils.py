@@ -4,7 +4,7 @@ import datetime
 from PIL import Image
 import signal
 
-ROOT_DIR = os.path.abspath(f"{os.curdir}\\past_scans")
+ROOT_DIR = os.path.abspath(f"{os.curdir}\\resources\\app\\dist\\server\\past_scans")
 
 
 def make_new_dir_from_path(image_path):
@@ -65,7 +65,7 @@ def get_file_extension(file_name: str):
 
 def close_app():
     process_id = os.getpid()
-    os.kill(process_id, signal.SIGTERM) #find a better way to do this
+    os.kill(process_id, signal.SIGTERM)
 
 
 def delete(file_path):

@@ -8,9 +8,9 @@ from PIL import Image
 
 def exception_hook(args:threading.ExceptHookArgs):
     server_utils.inform_scan_failed(args.exc_value.args)
-    # TODO: Add deletion of scan directory somehow?
 
 threading.excepthook = exception_hook
+
 
 def start_scan_in_thread(original_image_path, curr_scan_dir, model):
     executor_thread = threading.Thread(target=scan, args=(original_image_path, curr_scan_dir, model))

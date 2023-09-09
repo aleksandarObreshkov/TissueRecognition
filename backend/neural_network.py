@@ -1,12 +1,10 @@
 from tensorflow import keras
 import datasets
 import metrics
-from os import listdir, environ
+from os import listdir, environ, curdir
 
 model_name = "tissue_recogniser_idc"
-#model_name = "idc_"
 environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
-
 
 
 def get_network_model():
@@ -39,39 +37,8 @@ def get_network_model():
         keras.layers.Dense(2048, activation='relu'),
         keras.layers.Dropout(0.5),
 
-        keras.layers.Dense(1024, activation='relu'),
+        keras.layers.Dense(2048, activation='relu'),
         keras.layers.Dropout(0.5),
-
-        keras.layers.Dense(1, activation='sigmoid')
-    ])
-
-def get_vgg16():
-    return keras.models.Sequential([
-        keras.layers.Rescaling(1./255),
-
-        keras.layers.Conv2D(filters=256, kernel_size=(5,5), strides=(2,2), activation='relu', data_format="channels_last"),
-        keras.layers.Conv2D(filters=256, kernel_size=(5,5), strides=(2,2), activation='relu', data_format="channels_last"),
-        keras.layers.MaxPool2D(pool_size=(2,2), strides=(2,2)),
-
-        keras.layers.Conv2D(filters=256, kernel_size=(5,5), strides=(2,2), activation='relu', data_format="channels_last"),
-        keras.layers.Conv2D(filters=256, kernel_size=(5,5), strides=(2,2), activation='relu', data_format="channels_last"),
-        keras.layers.Conv2D(filters=256, kernel_size=(5,5), strides=(2,2), activation='relu', data_format="channels_last"),
-        keras.layers.MaxPool2D(pool_size=(2,2), strides=(2,2)),
-
-        keras.layers.Conv2D(filters=512, kernel_size=(3,3), strides=(2,2), activation='relu', data_format="channels_last"),
-        keras.layers.Conv2D(filters=512, kernel_size=(3,3), strides=(2,2), activation='relu', data_format="channels_last"),
-        keras.layers.Conv2D(filters=512, kernel_size=(3,2), strides=(2,2), activation='relu', data_format="channels_last"),
-        keras.layers.MaxPool2D(pool_size=(2,2), strides=(2,2)),
-
-        keras.layers.Conv2D(filters=512, kernel_size=(2,2), strides=(2,2), activation='relu', data_format="channels_last"),
-        keras.layers.Conv2D(filters=512, kernel_size=(2,2), strides=(2,2), activation='relu', data_format="channels_last"),
-        keras.layers.Conv2D(filters=512, kernel_size=(2,2), strides=(2,2), activation='relu', data_format="channels_last"),
-        keras.layers.MaxPool2D(pool_size=(2,2), strides=(2,2)),
-
-        keras.layers.Flatten(),
-
-        keras.layers.Dense(2048, activation='relu'),
-        keras.layers.Dense(2048, activation='relu'),
 
         keras.layers.Dense(1, activation='sigmoid')
     ])
@@ -110,15 +77,11 @@ def train_model():
 
 def get_model(cnn_model_name):
     m: keras.models.Model
-    print('Loading from memory')
-    return keras.models.load_model(f'C:\\Users\\aleks\\Projects\\IDC_Finder\\backend\\{cnn_model_name}')
 
-    # if cnn_model_name not in listdir("C:\\Users\\aleks\\Projects\\IDC_Finder\\frontend\\dist\\server"):
-    #     print("Creating Neural Network model")
-    #     m = train_model()
-    # else:
-    #     print("Loading Neural Network from memory")
-    #     m = keras.models.load_model(f'C:\\Users\\aleks\\Projects\\IDC_Finder\\frontend\\dist\\server\\{cnn_model_name}')
-    # return m
-
-# get_model(model_name)
+    if cnn_model_name not in listdir(f'{curdir}\\resources\\app\\dist\\server\\'):
+        print("Creating Neural Network model")
+        m = train_model()
+    else:
+        print("Loading Neural Network from memory")
+        m = keras.models.load_model(f'{curdir}\\resources\\app\\dist\\server\\{cnn_model_name}')
+    return m

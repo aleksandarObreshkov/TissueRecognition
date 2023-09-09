@@ -6,7 +6,7 @@ module.exports = {
   makers: [
     {
       name: '@electron-forge/maker-zip',
-      platforms: ['darwin', 'win32'],
+      platforms: ['win32'],
     }
   ],
   plugins: [

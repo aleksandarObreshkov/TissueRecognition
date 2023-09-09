@@ -6,8 +6,7 @@ const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch
 const { exec } = require('node:child_process')
 const express = require('express');
 const BACKEND_URL = "http://127.0.0.1:5000"
-//const ROOT_DIR = `${app.getAppPath()}\\dist\\server\\past_scans`
-const ROOT_DIR = "C:\\Users\\aleks\\Projects\\IDC_Finder\\backend\\past_scans"
+const ROOT_DIR = `${app.getAppPath()}\\dist\\server\\past_scans`
 
 let currentScans = []
 
@@ -134,7 +133,8 @@ async function getCurrentlyScanning() {
 }
 
 app.whenReady().then(() => {
-  //exec(`start ${app.getAppPath()}\\dist\\server\\server.exe`); 
+  console.log(app.getAppPath())
+  exec(`start ${app.getAppPath()}\\dist\\server\\server.exe`); 
 
   mainWindow = createWindow(HOME_PAGE, null);
   ipcMain.on('change-view', changeView);

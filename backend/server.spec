@@ -22,6 +22,7 @@ a = Analysis(
 a.datas+=Tree('./tissue_recogniser_idc', prefix='tissue_recogniser_idc')
 a.datas+=Tree('./py_wsi', prefix='py_wsi')
 a.datas+=Tree('./openslide', prefix='openslide')
+a.datas+=Tree('./past_scans', prefix='past_scans')
 pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(
